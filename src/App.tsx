@@ -1,21 +1,18 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { useTheme, ThemeProvider, createTheme, styled } from '@mui/material/styles';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 import "@fontsource/plus-jakarta-sans"; // Defaults to weight 400
-import { CssBaseline } from '@mui/material';
-import { PaletteMode } from '@mui/material';
+import { CssBaseline, PaletteMode, Box, Switch, Button, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { Hidden, Toolbar, Drawer, List, ListItem, ListItemText, Fab } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 // START OF DRAWER/APP-BAR HYBRID COMP
@@ -107,8 +104,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
 
 function App() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const colorMode = React.useContext(ColorModeContext);
+  const mobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -123,22 +121,24 @@ function App() {
     <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="fixed" open={open}>
+        <AppBar position="fixed" elevation={0} open={open}>
           <Toolbar sx={{ backgroundColor: theme.palette.background.paper, color: "text.primary" }}>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2, ...(open && { display: 'none' }) }}
-            >
-              <MenuIcon />
-            </IconButton>
+
+            {!open &&
+              <>
+                <img src={require('./assets/kanbanLogo.png')} />
+                <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
+                <Divider orientation="vertical" flexItem sx={{ mx: "20px" }} />
+              </>
+            }
+
+
             <Typography variant="h6" fontWeight={800} noWrap component="div">
               Platform Launch
             </Typography>
           </Toolbar>
         </AppBar>
+
         <Drawer
           sx={{
             width: drawerWidth,
@@ -146,38 +146,54 @@ function App() {
             '& .MuiDrawer-paper': {
               width: drawerWidth,
               boxSizing: 'border-box',
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             },
           }}
           variant="persistent"
           anchor="left"
           open={open}
         >
-          <DrawerHeader>
+
+          <div>
+
+          <DrawerHeader sx={{ display: "flex", justifyContent: "center" }}>
             <img src={require('./assets/kanbanLogo.png')} />
             <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-            </IconButton>
           </DrawerHeader>
 
-          <Box
-            sx={{
-              display: 'flex',
-              width: '100%',
-              alignItems: 'center',
-              justifyContent: 'center',
-              bgcolor: 'background.default',
-              color: 'text.primary',
-              borderRadius: 1,
-              p: "10 20 10 20",
-            }}
-          >
-            {theme.palette.mode} mode
-            <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-          </Box>
+          </div>
+
+
+
+          <div>
+
+            <Box
+              sx={{
+                display: 'flex',
+                width: '80%',
+                marginX: 'auto',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: 'background.default',
+                color: 'text.primary',
+                borderRadius: 1,
+                p: "10 20 10 20",
+              }}
+            >
+              <LightModeIcon />
+              <Switch checked={theme.palette.mode === 'dark'} onChange={colorMode.toggleColorMode} sx={{ marginLeft: '8px', marginRight: '8px' }} />
+              <DarkModeIcon />
+            </Box>
+
+            <Button onClick={handleDrawerClose} variant='text' sx={{ textTransform: 'none', width: '80%', marginX: 'auto', mt: "20px" }} startIcon={<VisibilityOffIcon />}>
+              Hide Sidebar
+            </Button>
+
+          </div>
         </Drawer>
+
         <Main open={open}>
           <DrawerHeader />
 
@@ -210,22 +226,25 @@ function App() {
           </Typography>
         </Main>
 
-        <Fab
-          color="primary"
-          aria-label="Add"
-          sx={{
-            position: 'fixed',
-            padding: "0px 30px",
-            borderRadius: "0px 40px 40px 0px",
-            bottom: (theme) => theme.spacing(1),
-            left: (theme) => theme.spacing(-1),
-            zIndex: (theme) => theme.zIndex.appBar + 1,
-            ...(open && { display: 'none' }),
-          }}
-          onClick={handleDrawerOpen}
-        >
-          <VisibilityIcon />
-        </Fab>
+        { !mobileScreen &&
+          <Fab
+            color="primary"
+            aria-label="Add"
+            sx={{
+              position: 'fixed',
+              padding: "0px 30px",
+              borderRadius: "0px 40px 40px 0px",
+              bottom: (theme) => theme.spacing(1),
+              left: (theme) => theme.spacing(-1),
+              zIndex: (theme) => theme.zIndex.appBar + 1,
+              ...(open && { display: 'none' }),
+            }}
+            onClick={handleDrawerOpen}
+          >
+            <VisibilityIcon />
+          </Fab>
+        }
+
       </Box>
     </>
   );
