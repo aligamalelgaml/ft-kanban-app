@@ -7,12 +7,12 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { Hidden, Toolbar, Drawer, List, ListItem, ListItemText, Fab } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { Boards } from './features/board/Boards';
 
 
 // START OF DRAWER/APP-BAR HYBRID COMP
@@ -45,19 +45,19 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
-}));
+    ...(open && {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: `${drawerWidth}px`,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -69,38 +69,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 // END OF DRAWER/APP-BAR HYBRID COMP
-
-const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
-
-const getDesignTokens = (mode: PaletteMode) => ({
-  palette: {
-    mode,
-    primary: {
-      main: '#635FC7',
-      hover: '#A8A4FF',
-    },
-    secondary: {
-      main: 'rgba(99, 95, 199, 0.1)',
-      hover: 'rgba(99, 95, 199, 0.25)',
-    },
-    destructive: {
-      main: '#EA5555',
-      hover: '#FF9898',
-    },
-    divider: 'rgba(110, 128, 152, 0.2)',
-    background: {
-      default: mode === 'light' ? '#F4F7FD' : '#121721',
-      paper: mode === 'light' ? '#FFFFFF' : '#2B2C37',
-    },
-    text: {
-      primary: mode === 'light' ? grey[900] : '#fff',
-      secondary: mode === 'light' ? grey[800] : grey[500],
-    },
-  },
-  typography: {
-    fontFamily: 'Plus Jakarta Sans',
-  }
-});
 
 function App() {
   const theme = useTheme();
@@ -126,7 +94,7 @@ function App() {
 
             {!open &&
               <>
-                <img src={require('./assets/kanbanLogo.png')} />
+                <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} />
                 <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
                 <Divider orientation="vertical" flexItem sx={{ mx: "20px" }} />
               </>
@@ -158,10 +126,10 @@ function App() {
 
           <div>
 
-          <DrawerHeader sx={{ display: "flex", justifyContent: "center" }}>
-            <img src={require('./assets/kanbanLogo.png')} />
-            <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
-          </DrawerHeader>
+            <DrawerHeader sx={{ display: "flex", justifyContent: "center" }}>
+              <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} />
+              <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
+            </DrawerHeader>
 
           </div>
 
@@ -197,36 +165,15 @@ function App() {
         <Main open={open}>
           <DrawerHeader />
 
-          <Typography paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-            enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-            imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-            Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-            Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-            adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-            nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-            leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-            feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-            consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-            sapien faucibus et molestie ac.
+          <Typography sx={{ margin: "auto" }}>
+            This board is empty. Create a new column to get started.
           </Typography>
-          <Typography paragraph>
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-            eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-            neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-            tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-            sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-            tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-            gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-            et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-            tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-            eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-            posuere sollicitudin aliquam ultrices sagittis orci a.
-          </Typography>
+
+          <Boards/>
+
         </Main>
 
-        { !mobileScreen &&
+        {!mobileScreen &&
           <Fab
             color="primary"
             aria-label="Add"
@@ -249,6 +196,38 @@ function App() {
     </>
   );
 }
+
+const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
+
+const getDesignTokens = (mode: PaletteMode) => ({
+  palette: {
+    mode,
+    primary: {
+      main: '#635FC7',
+      hover: '#A8A4FF',
+    },
+    secondary: {
+      main: 'rgba(99, 95, 199, 0.1)',
+      hover: 'rgba(99, 95, 199, 0.25)',
+    },
+    destructive: {
+      main: '#EA5555',
+      hover: '#FF9898',
+    },
+    divider: 'rgba(110, 128, 152, 0.2)',
+    background: {
+      default: mode === 'light' ? '#F4F7FD' : '#121721',
+      paper: mode === 'light' ? '#FFFFFF' : '#2B2C37',
+    },
+    text: {
+      primary: mode === 'light' ? grey[900] : '#fff',
+      secondary: mode === 'light' ? grey[800] : grey[500],
+    },
+  },
+  typography: {
+    fontFamily: 'Plus Jakarta Sans',
+  }
+});
 
 export default function ThemedApp() {
   const [mode, setMode] = React.useState<'light' | 'dark'>('light');
