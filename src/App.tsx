@@ -8,17 +8,15 @@ import { CssBaseline } from '@mui/material';
 import { PaletteMode } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import { Hidden, Toolbar, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import { Hidden, Toolbar, Drawer, List, ListItem, ListItemText, Fab } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 // START OF DRAWER/APP-BAR HYBRID COMP
 
@@ -109,7 +107,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
 
 function App() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const colorMode = React.useContext(ColorModeContext);
 
   const handleDrawerOpen = () => {
@@ -136,8 +134,8 @@ function App() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              Persistent drawer
+            <Typography variant="h6" fontWeight={800} noWrap component="div">
+              Platform Launch
             </Typography>
           </Toolbar>
         </AppBar>
@@ -155,7 +153,7 @@ function App() {
           open={open}
         >
           <DrawerHeader>
-            <img src={require('./assets/kanbanLogo.png')}/>
+            <img src={require('./assets/kanbanLogo.png')} />
             <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -182,6 +180,7 @@ function App() {
         </Drawer>
         <Main open={open}>
           <DrawerHeader />
+
           <Typography paragraph>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
             tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
@@ -210,15 +209,25 @@ function App() {
             posuere sollicitudin aliquam ultrices sagittis orci a.
           </Typography>
         </Main>
+
+        <Fab
+          color="primary"
+          aria-label="Add"
+          sx={{
+            position: 'fixed',
+            padding: "0px 30px",
+            borderRadius: "0px 40px 40px 0px",
+            bottom: (theme) => theme.spacing(1),
+            left: (theme) => theme.spacing(-1),
+            zIndex: (theme) => theme.zIndex.appBar + 1,
+            ...(open && { display: 'none' }),
+          }}
+          onClick={handleDrawerOpen}
+        >
+          <VisibilityIcon />
+        </Fab>
       </Box>
-
-
-
-
-
-
     </>
-
   );
 }
 
