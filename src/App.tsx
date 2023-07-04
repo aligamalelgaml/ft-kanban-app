@@ -85,6 +85,12 @@ function App() {
   const boards = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
 
+  const handleSelect = (id: string) => {
+    setTimeout(() => {
+      setCurrentBoard(id);
+    }, 1009); // Delay the state change by 100 milliseconds
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -149,14 +155,14 @@ function App() {
               {boards.map((board) =>
                 <Button 
                   key={board.id}
-                  onClick={() => setCurrentBoard(board.id)}
+                  onClick={() => handleSelect(board.id)}
                   sx={{
                     fontSize: "15px",
                     fontWeight: "700",
                     whiteSpace: "nowrap",
                     justifyContent: "flex-start",
-                    color: board.id === currentBoard ? "#FFFFFF" : "#828FA3" ,
-                    backgroundColor:  board.id === currentBoard ? "#635FC7" : "#FFFFFF",
+                    color: board.id === currentBoard ? "#FFFFFF" : "text.secondary" ,
+                    backgroundColor:  board.id === currentBoard ? "#635FC7" : "background.paper",
                     textTransform: "none",
                     width: "90%",
                     borderRadius: "0px 20px 20px 0px",
