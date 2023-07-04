@@ -3,7 +3,7 @@ import { RootState, AppThunk } from '../../app/store';
 import axios from 'axios';
 
 export interface BoardState {
-  boards: Array<Object>;
+  boards: Array<{ id: string; name: string }>;
   status: 'idle' | 'loading' | 'failed';
 }
 
@@ -32,8 +32,8 @@ export const boardSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    addTodoColumn: (state, action: PayloadAction<string>) => {
-      state.boards = state.boards.concat(action.payload);
+    addBoard: (state, action: PayloadAction<string>) => {
+      console.log("adding board")
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -45,7 +45,10 @@ export const boardSlice = createSlice({
       })
       .addCase(fetchBoards.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.boards.push(action.payload);
+        action.payload.forEach((board: any) => {
+          const {id, name} = board;
+          state.boards.push({id, name});
+        });
       })
       .addCase(fetchBoards.rejected, (state) => {
         state.status = 'failed';
@@ -53,7 +56,7 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { addTodoColumn } = boardSlice.actions;
+export const { addBoard } = boardSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

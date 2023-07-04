@@ -1,21 +1,26 @@
-import * as React from 'react';
+import { useState, useEffect, useMemo, createContext, useContext } from 'react';
 import { useTheme, ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import "@fontsource/plus-jakarta-sans"; // Defaults to weight 400
-import { CssBaseline, PaletteMode, Box, Switch, Button, Stack } from '@mui/material';
+import { CssBaseline, PaletteMode, Box, Switch, Button, Stack, ButtonGroup } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import { Hidden, Toolbar, Drawer, List, ListItem, ListItemText, Fab } from '@mui/material';
+import { Hidden, Toolbar, Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Fab } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Boards } from './features/board/Boards';
+import { useAppSelector, useAppDispatch } from './app/hooks';
+import { addBoard, selectBoards, fetchBoards } from './features/board/boardsSlice';
 
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-// START OF DRAWER/APP-BAR HYBRID COMP
+//#region: START OF DRAWER/APP-BAR HYBRID COMP
 
 const drawerWidth = 240;
 
@@ -45,19 +50,19 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
+  transition: theme.transitions.create(['margin', 'width'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
     }),
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  }));
+  }),
+}));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -68,13 +73,17 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-// END OF DRAWER/APP-BAR HYBRID COMP
+//#endregion: END OF DRAWER/APP-BAR HYBRID COMP
 
 function App() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const colorMode = React.useContext(ColorModeContext);
+  const [open, setOpen] = useState(false);
+  const colorMode = useContext(ColorModeContext);
   const mobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [currentBoard, setCurrentBoard] = useState("");
+  const boards = useAppSelector(selectBoards);
+  const dispatch = useAppDispatch();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -89,6 +98,7 @@ function App() {
     <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
+
         <AppBar position="fixed" elevation={0} open={open}>
           <Toolbar sx={{ backgroundColor: theme.palette.background.paper, color: "text.primary" }}>
 
@@ -100,10 +110,10 @@ function App() {
               </>
             }
 
-
             <Typography variant="h6" fontWeight={800} noWrap component="div">
               Platform Launch
             </Typography>
+
           </Toolbar>
         </AppBar>
 
@@ -125,18 +135,42 @@ function App() {
         >
 
           <div>
-
-            <DrawerHeader sx={{ display: "flex", justifyContent: "center" }}>
+            <DrawerHeader sx={{ display: "flex", justifyContent: "center", padding: "0" }}>
               <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} />
               <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
             </DrawerHeader>
 
+            <Box sx={{ padding: "20px" }}>
+              <Typography textTransform={'uppercase'} fontSize={12} letterSpacing={2.4} lineHeight={1} fontWeight={700} color={"text.secondary"}>
+                All Boards ({boards.length})
+              </Typography>
+            </Box>
+
+              {boards.map((board) =>
+                <Button 
+                  key={board.id}
+                  onClick={() => setCurrentBoard(board.id)}
+                  sx={{
+                    fontSize: "15px",
+                    fontWeight: "700",
+                    whiteSpace: "nowrap",
+                    justifyContent: "flex-start",
+                    color: board.id === currentBoard ? "#FFFFFF" : "#828FA3" ,
+                    backgroundColor:  board.id === currentBoard ? "#635FC7" : "#FFFFFF",
+                    textTransform: "none",
+                    width: "90%",
+                    borderRadius: "0px 20px 20px 0px",
+                    ":hover": {
+                      color: "primary.main",
+                      backgroundColor: "secondary.main"
+                    },
+                  }}>
+                  <TableChartIcon sx={{marginRight: "10px"}} /> {board.name}
+                </Button>
+              )}
           </div>
 
-
-
           <div>
-
             <Box
               sx={{
                 display: 'flex',
@@ -165,11 +199,7 @@ function App() {
         <Main open={open}>
           <DrawerHeader />
 
-          <Typography sx={{ margin: "auto" }}>
-            This board is empty. Create a new column to get started.
-          </Typography>
-
-          <Boards/>
+          <Boards />
 
         </Main>
 
@@ -191,13 +221,14 @@ function App() {
             <VisibilityIcon />
           </Fab>
         }
-
       </Box>
     </>
   );
 }
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
+//#region START OF EXPORTED THEMED APP
+
+const ColorModeContext = createContext({ toggleColorMode: () => { } });
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -220,18 +251,54 @@ const getDesignTokens = (mode: PaletteMode) => ({
       paper: mode === 'light' ? '#FFFFFF' : '#2B2C37',
     },
     text: {
-      primary: mode === 'light' ? grey[900] : '#fff',
-      secondary: mode === 'light' ? grey[800] : grey[500],
+      primary: mode === 'light' ? "#000112" : '#FFFFFF',
+      secondary: "#828FA3",
     },
   },
   typography: {
     fontFamily: 'Plus Jakarta Sans',
-  }
+  },
+  components: {
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            backgroundColor: "#2e8b57"
+          },
+          borderRadius: "0px 20px 20px 0px",
+          width: "80%",
+        },
+      },
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          ":hover": {
+            backgroundColor: "#635FC7",
+            color: "#635FC7",
+          },
+          borderRadius: "0px 20px 20px 0px",
+          width: "80%",
+        },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          color: "#828FA3",
+          ":hover": {
+            color: "#635FC7",
+          }
+        },
+      },
+    }
+  },
 });
 
+
 export default function ThemedApp() {
-  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
-  const colorMode = React.useMemo(
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
         setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
@@ -240,7 +307,7 @@ export default function ThemedApp() {
     [],
   );
 
-  const theme = React.useMemo(
+  const theme = useMemo(
     () => createTheme(getDesignTokens(mode)),
     [mode],
   );
@@ -254,3 +321,5 @@ export default function ThemedApp() {
     </ColorModeContext.Provider>
   );
 }
+
+//#endregion END OF EXPORTED THEMED APP
