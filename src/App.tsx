@@ -22,7 +22,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 //#region: START OF DRAWER/APP-BAR HYBRID COMP
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -85,12 +85,6 @@ function App() {
   const boards = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
 
-  const handleSelect = (id: string) => {
-    setTimeout(() => {
-      setCurrentBoard(id);
-    }, 1009); // Delay the state change by 100 milliseconds
-  };
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -152,17 +146,15 @@ function App() {
               </Typography>
             </Box>
 
-              {boards.map((board) =>
-                <Button 
-                  key={board.id}
-                  onClick={() => handleSelect(board.id)}
-                  sx={{
+            <List>
+
+              {/* sx={{
                     fontSize: "15px",
                     fontWeight: "700",
                     whiteSpace: "nowrap",
                     justifyContent: "flex-start",
-                    color: board.id === currentBoard ? "#FFFFFF" : "text.secondary" ,
-                    backgroundColor:  board.id === currentBoard ? "#635FC7" : "background.paper",
+                    color: board.id === currentBoard ? "#FFFFFF" : "text.secondary",
+                    backgroundColor: board.id === currentBoard ? "#635FC7" : "background.paper",
                     textTransform: "none",
                     width: "90%",
                     borderRadius: "0px 20px 20px 0px",
@@ -170,10 +162,45 @@ function App() {
                       color: "primary.main",
                       backgroundColor: "secondary.main"
                     },
-                  }}>
-                  <TableChartIcon sx={{marginRight: "10px"}} /> {board.name}
-                </Button>
+                  }} */}
+
+              {boards.map((board) =>
+                <ListItem sx={{ width: "80%" }} key={board.id} disablePadding>
+                  <ListItemButton onClick={() => setCurrentBoard(board.id)} selected={board.id === currentBoard}
+                    sx={{
+                      fontSize: "15px",
+                      fontWeight: "700",
+                      whiteSpace: "nowrap",
+                      width: "80%",
+                      borderRadius: "0px 20px 20px 0px",
+                      '&:hover': {
+                        backgroundColor: 'secondary.main', // background color on hover
+                        '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                          color: 'primary.main', // text color on hover
+                        },
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: 'primary.main', // background color when selected
+                        '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                          color: '#FFFFFF', // text color when selected
+                        }, '&:hover': {
+                          backgroundColor: 'secondary.main', // background color on hover
+                          '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                            color: 'primary.main', // text color on hover
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    <ListItemIcon>
+                      <TableChartIcon sx={{ minWidth: "30px" }} />
+                    </ListItemIcon>
+                    <ListItemText primary={board.name} />
+                  </ListItemButton>
+                </ListItem>
               )}
+            </List>
+
           </div>
 
           <div>
@@ -244,7 +271,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       hover: '#A8A4FF',
     },
     secondary: {
-      main: 'rgba(99, 95, 199, 0.1)',
+      main: mode === 'light' ? 'rgba(99, 95, 199, 0.1)' : '#FFFFFF',
       hover: 'rgba(99, 95, 199, 0.25)',
     },
     destructive: {
@@ -264,41 +291,41 @@ const getDesignTokens = (mode: PaletteMode) => ({
   typography: {
     fontFamily: 'Plus Jakarta Sans',
   },
-  components: {
-    MuiListItemButton: {
-      styleOverrides: {
-        root: {
-          "&.Mui-selected": {
-            backgroundColor: "#2e8b57"
-          },
-          borderRadius: "0px 20px 20px 0px",
-          width: "80%",
-        },
-      },
-    },
-    MuiListItem: {
-      styleOverrides: {
-        root: {
-          ":hover": {
-            backgroundColor: "#635FC7",
-            color: "#635FC7",
-          },
-          borderRadius: "0px 20px 20px 0px",
-          width: "80%",
-        },
-      },
-    },
-    MuiListItemText: {
-      styleOverrides: {
-        root: {
-          color: "#828FA3",
-          ":hover": {
-            color: "#635FC7",
-          }
-        },
-      },
-    }
-  },
+  // components: {
+  //   MuiListItemButton: {
+  //     styleOverrides: {
+  //       root: {
+  //         "&.Mui-selected": {
+  //           backgroundColor: "#2e8b57"
+  //         },
+  //         borderRadius: "0px 20px 20px 0px",
+  //         width: "80%",
+  //       },
+  //     },
+  //   },
+  //   MuiListItem: {
+  //     styleOverrides: {
+  //       root: {
+  //         ":hover": {
+  //           backgroundColor: "#635FC7",
+  //           color: "#635FC7",
+  //         },
+  //         borderRadius: "0px 20px 20px 0px",
+  //         width: "80%",
+  //       },
+  //     },
+  //   },
+  //   MuiListItemText: {
+  //     styleOverrides: {
+  //       root: {
+  //         color: "#828FA3",
+  //         ":hover": {
+  //           color: "#635FC7",
+  //         }
+  //       },
+  //     },
+  //   }
+  // },
 });
 
 
