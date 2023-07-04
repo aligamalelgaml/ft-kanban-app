@@ -81,7 +81,7 @@ function App() {
   const colorMode = useContext(ColorModeContext);
   const mobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [currentBoard, setCurrentBoard] = useState("");
+  const [currentBoard, setCurrentBoard] = useState(Object);
   const boards = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
 
@@ -111,7 +111,7 @@ function App() {
             }
 
             <Typography variant="h6" fontWeight={800} noWrap component="div">
-              Platform Launch
+              {currentBoard.name}
             </Typography>
 
           </Toolbar>
@@ -147,26 +147,9 @@ function App() {
             </Box>
 
             <List>
-
-              {/* sx={{
-                    fontSize: "15px",
-                    fontWeight: "700",
-                    whiteSpace: "nowrap",
-                    justifyContent: "flex-start",
-                    color: board.id === currentBoard ? "#FFFFFF" : "text.secondary",
-                    backgroundColor: board.id === currentBoard ? "#635FC7" : "background.paper",
-                    textTransform: "none",
-                    width: "90%",
-                    borderRadius: "0px 20px 20px 0px",
-                    ":hover": {
-                      color: "primary.main",
-                      backgroundColor: "secondary.main"
-                    },
-                  }} */}
-
               {boards.map((board) =>
                 <ListItem sx={{ width: "80%" }} key={board.id} disablePadding>
-                  <ListItemButton onClick={() => setCurrentBoard(board.id)} selected={board.id === currentBoard}
+                  <ListItemButton onClick={() => setCurrentBoard(board)} selected={board.id === currentBoard.id}
                     sx={{
                       fontSize: "15px",
                       fontWeight: "700",
