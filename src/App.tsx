@@ -15,13 +15,10 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Boards } from './features/board/Boards';
 import { useAppSelector, useAppDispatch } from './app/hooks';
-import { addBoard, selectBoards, fetchBoards } from './features/board/boardsSlice';
+import { addBoard, setCurrentBoard, selectBoards, selectCurrentBoard } from './features/board/boardsSlice';
 
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-//#region: START OF DRAWER/APP-BAR HYBRID COMP
-
+/* #region APP BAR / DRAWER STYLING  */
 const drawerWidth = 300;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -73,7 +70,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-//#endregion: END OF DRAWER/APP-BAR HYBRID COMP
+/* #endregion */
 
 function App() {
   const theme = useTheme();
@@ -81,8 +78,8 @@ function App() {
   const colorMode = useContext(ColorModeContext);
   const mobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [currentBoard, setCurrentBoard] = useState(Object);
   const boards = useAppSelector(selectBoards);
+  const currentBoard = useAppSelector(selectCurrentBoard);
   const dispatch = useAppDispatch();
 
   const handleDrawerOpen = () => {
@@ -149,27 +146,27 @@ function App() {
             <List>
               {boards.map((board) =>
                 <ListItem sx={{ width: "80%" }} key={board.id} disablePadding>
-                  <ListItemButton onClick={() => setCurrentBoard(board)} selected={board.id === currentBoard.id}
+                  <ListItemButton onClick={() => dispatch(setCurrentBoard(board))} selected={board.id === currentBoard.id}
                     sx={{
                       fontSize: "15px",
                       fontWeight: "700",
                       whiteSpace: "nowrap",
                       width: "80%",
                       borderRadius: "0px 20px 20px 0px",
-                      '&:hover': {
-                        backgroundColor: 'secondary.main', // background color on hover
+                      '&:hover': { // colors on hover
+                        backgroundColor: 'secondary.main',
                         '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
-                          color: 'primary.main', // text color on hover
+                          color: 'primary.main',
                         },
                       },
-                      '&.Mui-selected': {
-                        backgroundColor: 'primary.main', // background color when selected
+                      '&.Mui-selected': { // colors when selected
+                        backgroundColor: 'primary.main',
                         '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
-                          color: '#FFFFFF', // text color when selected
-                        }, '&:hover': {
-                          backgroundColor: 'secondary.main', // background color on hover
+                          color: '#FFFFFF',
+                        }, '&:hover': { // colors on hover & selected
+                          backgroundColor: 'secondary.main',
                           '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
-                            color: 'primary.main', // text color on hover
+                            color: 'primary.main',
                           },
                         },
                       },
