@@ -14,7 +14,7 @@ export default function List({ list }: ListProps) {
     const cards = useAppSelector((state) => selectCards(state, list.id));
     const dispatch = useAppDispatch();
 
-    console.log(cards);
+    console.log("card list", list.name,  cards);
 
     useEffect(() => {
         dispatch(fetchCards(list.id));
