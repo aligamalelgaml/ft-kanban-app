@@ -11,6 +11,8 @@ export function Boards() {
   const currentBoard = useAppSelector(selectCurrentBoard);
   const dispatch = useAppDispatch();
 
+  
+
   /**
    * Initial call to fetch all user boards.
    */
@@ -37,9 +39,9 @@ export function Boards() {
         </Typography>
       }
 
-      <Grid container spacing={4} justifyContent={"center"}>
+      <Grid container spacing={2}>
         {lists.map((list) =>
-          <Grid key={list.id} item xs={12} md={2}>
+          <Grid key={list.id} item xs={12} md={4}>
               <List list={list}/>
           </Grid>
         )}
