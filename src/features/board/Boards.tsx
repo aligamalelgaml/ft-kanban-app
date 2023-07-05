@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { addBoard, selectBoards, fetchBoards } from './boardsSlice';
-import { Button, Box, Typography } from '@mui/material';
+import { addBoard, selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
+import { selectLists, fetchLists } from '../list/listSlice';
+import { Button, Box, Typography, Stack, Grid, Card } from '@mui/material';
 import List from '../list/List';
 
 export function Boards() {
   const boards = useAppSelector(selectBoards);
+  const lists = useAppSelector(selectLists);
+  const currentBoard = useAppSelector(selectCurrentBoard);
   const dispatch = useAppDispatch();
 
   /**
@@ -15,18 +18,33 @@ export function Boards() {
     dispatch(fetchBoards());
   }, [])
 
+  /**
+  * Fetch user lists (columns) once currentBoard changes.
+  */
+  useEffect(() => {
+    if (currentBoard.id !== "") {
+      dispatch(fetchLists(currentBoard.id));
+    }
+  }, [currentBoard])
+
   return (
     <>
-      {console.log(boards)}
+      {console.log(lists)}
 
-        {boards &&
-          <Typography align='center' marginY={"35vh"}>
-            No boards created, create a board first.
-          </Typography>
-        }
+      {!boards &&
+        <Typography align='center' marginY={"35vh"}>
+          No boards created, create a board first.
+        </Typography>
+      }
 
+      <Grid container spacing={4} justifyContent={"center"}>
+        {lists.map((list) =>
+          <Grid key={list.id} item xs={12} md={2}>
+              <List list={list}/>
+          </Grid>
+        )}
 
-        <List/>
+      </Grid>
     </>
   );
 }

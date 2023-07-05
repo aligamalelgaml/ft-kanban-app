@@ -26,6 +26,7 @@ export const fetchLists = createAsyncThunk(
     }
 );
 
+
 export const listSlice = createSlice({
     name: 'list',
     initialState,
@@ -52,7 +53,7 @@ export const listSlice = createSlice({
             })
             .addCase(fetchLists.rejected, (state) => {
                 state.status = 'failed';
-            });
+            })
     },
 });
 
