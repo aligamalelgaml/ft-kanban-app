@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import axios from 'axios';
+import {key, token} from '../../app/auth';
 
 export interface BoardState {
   boards: Array<{ id: string; name: string }>;
@@ -14,29 +15,32 @@ const initialState: BoardState = {
   status: 'idle',
 };
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched. Thunks are
-// typically used to make async requests.
-
 export const fetchBoards = createAsyncThunk(
   'board/fetchBoards',
   async () => {
-    const response = await axios("https://api.trello.com/1/members/me/boards?key=43fa6c84ae014f2d39ecd38e3813a8b0&token=ATTA831f4c44d08bddff424862f8de9220e91c2f7b7d53669bc6cf666fb8b9c8966a2AA36F4F");
-    // The value we return becomes the `fulfilled` action payload
+    const response = await axios(`https://api.trello.com/1/members/me/boards?key=${key}&token=${token}`);
     return response.data;
   }
-);
+)
+
+export const createBoard = createAsyncThunk(
+  'board/createBoard',
+  async (boardName: string) => {
+    try {
+      const postBoard = await axios.post(`https://api.trello.com/1/boards/?name=${boardName}&key=${key}&token=${token}`);
+      const { data } = await axios(`https://api.trello.com/1/members/me/boards?key=${key}&token=${token}`)
+      return data.find((board: any) => board.name === boardName)
+    } catch (error) {
+      throw new Error('Board creation failed'); // Throw an error to trigger the rejection of the promise
+    }
+  }
+)
 
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    addBoard: (state, action: PayloadAction<string>) => {
-      console.log("adding board")
-    },
     setCurrentBoard: (state, action: PayloadAction<{id: string, name: string}>) => {
       state.currentBoard = { id: action.payload.id, name: action.payload.name };
     }
@@ -57,11 +61,21 @@ export const boardSlice = createSlice({
       })
       .addCase(fetchBoards.rejected, (state) => {
         state.status = 'failed';
+      })
+      .addCase(createBoard.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createBoard.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.currentBoard = action.payload;
+      })
+      .addCase(createBoard.rejected, (state) => {
+        state.status = 'failed';
       });
   },
 });
 
-export const { addBoard, setCurrentBoard } = boardSlice.actions;
+export const { setCurrentBoard } = boardSlice.actions;
 
 export const selectBoards = (state: RootState) => state.board.boards;
 export const selectCurrentBoard = (state: RootState) => state.board.currentBoard;

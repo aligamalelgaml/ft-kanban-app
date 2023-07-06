@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import axios from 'axios';
+import {key, token} from '../../app/auth';
+
 
 export interface ListState {
     lists: Array<{ id: string; name: string, idBoard: string }>;

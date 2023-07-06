@@ -16,7 +16,7 @@ export default function List({ list }: ListProps) {
     const [color] = useState(() => getRandomColor());
     const currentBoard = useAppSelector(selectCurrentBoard);
     const cards = useAppSelector((state) => selectCards(state, list.id));
-    const dispatch = useAppDispatch();    
+    const dispatch = useAppDispatch();
 
     console.log("card list", list.name, cards);
 
@@ -27,14 +27,14 @@ export default function List({ list }: ListProps) {
 
     return (
         <Stack gap={2}>
-                <Stack gap={1} direction={"row"} alignItems={"center"}>
-                <CircleIcon sx={{color: color, fontSize: "15px"}}/>
+            <Stack gap={1} direction={"row"} alignItems={"center"}>
+                <CircleIcon sx={{ color: color, fontSize: "15px" }} />
                 <Typography letterSpacing={2.4} textTransform={"uppercase"} fontWeight={700} color={"text.secondary"} fontSize={12}> {list.name} ({cards.length}) </Typography>
-                </Stack>
+            </Stack>
 
-                {cards.map((card) => 
-                <Card elevation={3} sx={{padding: "20px"}}>
-                   <Typography fontWeight={700} fontSize={15}> {card.name} </Typography>
+            {cards.map((card) =>
+                <Card key={card.id} elevation={3} sx={{ padding: "20px" }}>
+                    <Typography fontWeight={700} fontSize={15}> {card.name} </Typography>
                 </Card>)}
         </Stack>
     );

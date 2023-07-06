@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { addBoard, selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
+import { selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
 import { selectLists, fetchLists } from '../list/listSlice';
 import { Button, Box, Typography, Stack, Grid, Card } from '@mui/material';
 import List from '../list/List';
@@ -11,14 +11,12 @@ export function Boards() {
   const currentBoard = useAppSelector(selectCurrentBoard);
   const dispatch = useAppDispatch();
 
-  
-
   /**
-   * Initial call to fetch all user boards.
+   * Initial call to fetch all user boards + switches to new board upon new board creation.
    */
   useEffect(() => {
     dispatch(fetchBoards());
-  }, [])
+  }, [currentBoard])
 
   /**
   * Fetch user lists (columns) once currentBoard changes.

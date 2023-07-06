@@ -15,7 +15,8 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Boards } from './features/board/Boards';
 import { useAppSelector, useAppDispatch } from './app/hooks';
-import { addBoard, setCurrentBoard, selectBoards, selectCurrentBoard } from './features/board/boardsSlice';
+import { setCurrentBoard, selectBoards, selectCurrentBoard } from './features/board/boardsSlice';
+import BoardDialog from './features/board/BoardDialog';
 
 
 /* #region APP BAR / DRAWER STYLING  */
@@ -74,13 +75,22 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 function App() {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
   const colorMode = useContext(ColorModeContext);
+  const [open, setOpen] = useState(false); // Drawer state
+  const [boardDialogeOpen, setBoardDialogeOpen] = useState(false) // Create board dialoge state.
   const mobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const boards = useAppSelector(selectBoards);
   const currentBoard = useAppSelector(selectCurrentBoard);
-  const dispatch = useAppDispatch();
+
+  const handleAddBoard = () => {
+    setBoardDialogeOpen(true);
+  }
+
+  const handleBoardDialogeClose = () => {
+    setBoardDialogeOpen(false);
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -93,6 +103,8 @@ function App() {
 
   return (
     <>
+      <BoardDialog open={boardDialogeOpen} onClose={handleBoardDialogeClose}/>
+
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
 
@@ -145,13 +157,13 @@ function App() {
 
             <List>
               {boards.map((board) =>
-                <ListItem sx={{ width: "80%" }} key={board.id} disablePadding>
+                <ListItem sx={{ width: "85%" }} key={board.id} disablePadding>
                   <ListItemButton onClick={() => dispatch(setCurrentBoard(board))} selected={board.id === currentBoard.id}
                     sx={{
                       fontSize: "15px",
                       fontWeight: "700",
                       whiteSpace: "nowrap",
-                      width: "80%",
+                      width: "85%",
                       borderRadius: "0px 20px 20px 0px",
                       '&:hover': { // colors on hover
                         backgroundColor: 'secondary.main',
@@ -172,13 +184,51 @@ function App() {
                       },
                     }}
                   >
-                    <ListItemIcon>
-                      <TableChartIcon sx={{ minWidth: "30px" }} />
+                    <ListItemIcon style={{minWidth: '35px'}}>
+                      <TableChartIcon />
                     </ListItemIcon>
                     <ListItemText primary={board.name} />
                   </ListItemButton>
                 </ListItem>
               )}
+
+              <ListItem sx={{ width: "85%" }} disablePadding>
+                  <ListItemButton onClick={() => handleAddBoard()}
+                    sx={{
+                      fontSize: "15px",
+                      fontWeight: "700",
+                      whiteSpace: "nowrap",
+                      color: "primary.main",
+                      width: "85%",
+                      borderRadius: "0px 20px 20px 0px",
+                      '& .MuiListItemIcon-root': {
+                        color: "primary.main"
+                      },
+                      '&:hover': { // colors on hover
+                        backgroundColor: 'secondary.main',
+                        '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                          color: 'primary.main',
+                        },
+                      },
+                      '&.Mui-selected': { // colors when selected
+                        backgroundColor: 'primary.main',
+                        '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                          color: '#FFFFFF',
+                        }, '&:hover': { // colors on hover & selected
+                          backgroundColor: 'secondary.main',
+                          '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                            color: 'primary.main',
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    <ListItemIcon style={{minWidth: '35px'}}>
+                      <TableChartIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"+ Create New Board"} />
+                  </ListItemButton>
+                </ListItem>
             </List>
 
           </div>
