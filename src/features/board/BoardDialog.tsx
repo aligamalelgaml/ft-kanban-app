@@ -49,8 +49,7 @@ export default function FormDialog({ open, onClose }: FormDialogProps) {
     };
 
     const onSubmit = handleSubmit(({boardName, additionalFields}) => {
-        console.log(boardName);
-        dispatch(createBoard(boardName));
+        dispatch(createBoard({boardName, lists: additionalFields as string[]}));
         reset();
         onClose();
     });

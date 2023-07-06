@@ -1,17 +1,18 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { addList } from '../list/listSlice';
 import { RootState, AppThunk } from '../../app/store';
 import axios from 'axios';
-import {key, token} from '../../app/auth';
+import { key, token } from '../../app/auth';
 
 export interface BoardState {
   boards: Array<{ id: string; name: string }>;
-  currentBoard: {id: string, name: string};
+  currentBoard: { id: string, name: string };
   status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: BoardState = {
   boards: [],
-  currentBoard: {id: "", name: ""},
+  currentBoard: { id: "", name: "" },
   status: 'idle',
 };
 
@@ -25,11 +26,18 @@ export const fetchBoards = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
   'board/createBoard',
-  async (boardName: string) => {
+  async ({ boardName, lists }: { boardName: string, lists: string[] }, { dispatch }) => {
     try {
-      const postBoard = await axios.post(`https://api.trello.com/1/boards/?name=${boardName}&key=${key}&token=${token}`);
+      const noLists = lists.length === 0;
+      const postBoard = await axios.post(`https://api.trello.com/1/boards/?name=${boardName}&defaultLists=${noLists}&key=${key}&token=${token}`);
       const { data } = await axios(`https://api.trello.com/1/members/me/boards?key=${key}&token=${token}`)
-      return data.find((board: any) => board.name === boardName)
+      const newBoard = data.find((board: any) => board.name === boardName);
+
+      if (!noLists) {
+        await Promise.all(lists.map((listName) => dispatch(addList({ boardID: newBoard.id, listName })))); // This is made so so that newBoard only returns the new board when we are done pushing all the new columns to the new board first to prevent triggering an early refresh and having some missing columns that were otherwise still being POSTed to the trello API endpoint.
+      }
+
+      return newBoard;
     } catch (error) {
       throw new Error('Board creation failed'); // Throw an error to trigger the rejection of the promise
     }
@@ -41,7 +49,7 @@ export const boardSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setCurrentBoard: (state, action: PayloadAction<{id: string, name: string}>) => {
+    setCurrentBoard: (state, action: PayloadAction<{ id: string, name: string }>) => {
       state.currentBoard = { id: action.payload.id, name: action.payload.name };
     }
   },

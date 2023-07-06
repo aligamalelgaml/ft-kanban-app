@@ -12,16 +12,10 @@ export function Boards() {
   const dispatch = useAppDispatch();
 
   /**
-   * Initial call to fetch all user boards + switches to new board upon new board creation.
+   * Initial call to fetch all user boards + switches to new board upon new board creation, also fetchs user lists (columns) once currentBoard changes.
    */
   useEffect(() => {
     dispatch(fetchBoards());
-  }, [currentBoard])
-
-  /**
-  * Fetch user lists (columns) once currentBoard changes.
-  */
-  useEffect(() => {
     if (currentBoard.id !== "") {
       dispatch(fetchLists(currentBoard.id));
     }
