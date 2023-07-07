@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction, createSelector, ParametricSelector } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import axios from 'axios';
+import {key, token} from '../../app/auth';
+
 
 interface Card {
   id: string;
@@ -17,18 +19,28 @@ export interface CardState {
 const initialState: CardState = {
   cards: {},
   status: 'idle',
-};
+}
 
 export const fetchCards = createAsyncThunk(
   'card/fetchCards',
-  async (lists: Array<{id: string}>) => {
+  async (lists: Array<{ id: string }>) => {
+    console.log("fetching:", lists)
     const responseArray = await Promise.all(
       lists.map(list =>
-        axios(`https://api.trello.com/1/lists/${list.id}/cards?key=43fa6c84ae014f2d39ecd38e3813a8b0&token=ATTA831f4c44d08bddff424862f8de9220e91c2f7b7d53669bc6cf666fb8b9c8966a2AA36F4F`)
+        axios(`https://api.trello.com/1/lists/${list.id}/cards?key=${key}&token=${token}`)
+          .then(response => ({
+            listID: list.id,
+            cards: response.data
+          }))
       )
     );
-    const data = responseArray.map(response => response.data);
-    return data;
+
+    const responseData = responseArray.reduce((data: any, { listID, cards }) => {
+      data[listID] = cards;
+      return data;
+    }, {});
+
+    return responseData;
   }
 );
 
@@ -47,7 +59,7 @@ export const cardSlice = createSlice({
       })
       .addCase(fetchCards.fulfilled, (state, action) => {
         state.status = 'idle';
-        console.log(action.payload)
+        state.cards = action.payload;
         // action.payload.forEach((card: Card) => {
         //   const { idList, id } = card;
 
@@ -75,9 +87,8 @@ export const selectCards = createSelector(
   selectCardState,
   (_: RootState, listID: string) => listID,
   (cardState, listID) => {
-    const typedCardState = cardState as CardState;
-    const cardList = typedCardState.cards[listID];
-    return cardList || [];
+    const cards = cardState.cards[listID];
+    return cards || [];
   }
 );
 

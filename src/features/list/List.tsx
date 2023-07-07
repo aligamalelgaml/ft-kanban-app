@@ -4,6 +4,7 @@ import { addList, selectLists, fetchLists } from './listSlice';
 import { selectCurrentBoard } from '../board/boardsSlice';
 import { selectCards, fetchCards } from '../card/cardSlice';
 import { Button, Box, Typography, Stack, Grid, Card } from '@mui/material';
+import CardTasks from '../card/Card';
 import CircleIcon from '@mui/icons-material/Circle';
 
 interface ListProps {
@@ -15,7 +16,6 @@ const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString
 export default React.memo(({ list }: ListProps) => {
     const [color] = useState(() => getRandomColor());
     const currentBoard = useAppSelector(selectCurrentBoard);
-    // const cards = useAppSelector((state) => selectCards(state, list.id));
     const dispatch = useAppDispatch();
 
     console.log("card list", list.name);
@@ -32,10 +32,7 @@ export default React.memo(({ list }: ListProps) => {
                 <Typography letterSpacing={2.4} textTransform={"uppercase"} fontWeight={700} color={"text.secondary"} fontSize={12}> {list.name} (cards.length) </Typography>
             </Stack>
 
-            {/* {cards.map((card) =>
-                <Card key={card.id} elevation={3} sx={{ padding: "20px" }}>
-                    <Typography fontWeight={700} fontSize={15}> {card.name} </Typography>
-                </Card>)} */}
+            <CardTasks listID={list.id}/>
         </Stack>
     );
 });
