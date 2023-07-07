@@ -30,7 +30,7 @@ export function Boards() {
     }
   }, [currentBoard])
 
- 
+
   useEffect(() => {
     if (currentBoard.id !== "") {
       dispatch(fetchCards(lists));

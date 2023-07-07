@@ -165,6 +165,7 @@ function App() {
                       whiteSpace: "nowrap",
                       width: "85%",
                       borderRadius: "0px 20px 20px 0px",
+                      pointerEvents: board.id === currentBoard.id ? "none" : "auto",
                       '&:hover': { // colors on hover
                         backgroundColor: 'secondary.main',
                         '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
