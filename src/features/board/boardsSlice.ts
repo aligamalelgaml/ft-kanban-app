@@ -27,7 +27,6 @@ export const fetchBoards = createAsyncThunk(
 export const createBoard = createAsyncThunk(
   'board/createBoard',
   async ({ boardName, lists }: { boardName: string, lists: string[] }, { dispatch }) => {
-    try {
       const noLists = lists.length === 0;
       const postBoard = await axios.post(`https://api.trello.com/1/boards/?name=${boardName}&defaultLists=${noLists}&key=${key}&token=${token}`);
       const { data } = await axios(`https://api.trello.com/1/members/me/boards?key=${key}&token=${token}`)
@@ -38,9 +37,13 @@ export const createBoard = createAsyncThunk(
       }
 
       return newBoard;
-    } catch (error) {
-      throw new Error('Board creation failed'); // Throw an error to trigger the rejection of the promise
-    }
+  }
+)
+
+export const deleteBoard = createAsyncThunk(
+  'board/deleteBoard',
+  async (boardID: string) => {
+    await axios.delete(`https://api.trello.com/1/boards/${boardID}?key=${key}&token=${token}`);
   }
 )
 
@@ -69,6 +72,7 @@ export const boardSlice = createSlice({
       })
       .addCase(fetchBoards.rejected, (state) => {
         state.status = 'failed';
+        throw new Error("Board fetching failed!")
       })
       .addCase(createBoard.pending, (state) => {
         state.status = 'loading';
@@ -79,6 +83,17 @@ export const boardSlice = createSlice({
       })
       .addCase(createBoard.rejected, (state) => {
         state.status = 'failed';
+        throw new Error("Board creation failed!")
+      })
+      .addCase(deleteBoard.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteBoard.fulfilled, (state) => {
+        state.status = 'idle';
+      })
+      .addCase(deleteBoard.rejected, (state) => {
+        state.status = 'failed';
+        throw new Error("Board deletion failed!")
       });
   },
 });

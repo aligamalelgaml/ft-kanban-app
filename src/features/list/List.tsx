@@ -12,18 +12,18 @@ interface ListProps {
 
 const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase();
 
-export default function List({ list }: ListProps) {
+export default React.memo(({ list }: ListProps) => {
     const [color] = useState(() => getRandomColor());
     const currentBoard = useAppSelector(selectCurrentBoard);
     const cards = useAppSelector((state) => selectCards(state, list.id));
     const dispatch = useAppDispatch();
 
-    console.log("card list", list.name, cards);
+    console.log("card list", list.name);
 
-    useEffect(() => {
-        dispatch(fetchCards(list.id));
-    }, [list])
-
+    // WIP: to prevent rerendering, move fetching of cards to parent (boards component) and pass each list's cards as a prop
+    // useEffect(() => {
+    //     dispatch(fetchCards(list.id));
+    // }, [list])
 
     return (
         <Stack gap={2}>
@@ -38,4 +38,5 @@ export default function List({ list }: ListProps) {
                 </Card>)}
         </Stack>
     );
-}
+});
+

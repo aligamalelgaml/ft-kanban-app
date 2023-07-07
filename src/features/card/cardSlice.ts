@@ -21,10 +21,14 @@ const initialState: CardState = {
 
 export const fetchCards = createAsyncThunk(
   'card/fetchCards',
-  async (listID: string) => {
-    console.log("Fetching List ID: ", listID);
-    const response = await axios(`https://api.trello.com/1/lists/${listID}/cards?key=43fa6c84ae014f2d39ecd38e3813a8b0&token=ATTA831f4c44d08bddff424862f8de9220e91c2f7b7d53669bc6cf666fb8b9c8966a2AA36F4F`);
-    return response.data;
+  async (lists: Array<{id: string}>) => {
+    const responseArray = await Promise.all(
+      lists.map(list =>
+        axios(`https://api.trello.com/1/lists/${list.id}/cards?key=43fa6c84ae014f2d39ecd38e3813a8b0&token=ATTA831f4c44d08bddff424862f8de9220e91c2f7b7d53669bc6cf666fb8b9c8966a2AA36F4F`)
+      )
+    );
+    const data = responseArray.map(response => response.data);
+    return data;
   }
 );
 
@@ -43,18 +47,19 @@ export const cardSlice = createSlice({
       })
       .addCase(fetchCards.fulfilled, (state, action) => {
         state.status = 'idle';
-        action.payload.forEach((card: Card) => {
-          const { idList, id } = card;
+        console.log(action.payload)
+        // action.payload.forEach((card: Card) => {
+        //   const { idList, id } = card;
 
-          if (!state.cards[idList]) {
-            state.cards[idList] = [];
-          }
+        //   if (!state.cards[idList]) {
+        //     state.cards[idList] = [];
+        //   }
 
-          const existingCard = state.cards[idList].find((c) => c.id === id);
-          if (!existingCard) {
-            state.cards[idList].push({id: card.id, name: card.name, idBoard: card.idBoard, idList: card.idList});
-          }
-        });
+        //   const existingCard = state.cards[idList].find((c) => c.id === id);
+        //   if (!existingCard) {
+        //     state.cards[idList].push({id: card.id, name: card.name, idBoard: card.idBoard, idList: card.idList});
+        //   }
+        // });
       })
       .addCase(fetchCards.rejected, (state) => {
         state.status = 'failed';

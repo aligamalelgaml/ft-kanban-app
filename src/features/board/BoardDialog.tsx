@@ -10,21 +10,26 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { IconButton, Box, Stack } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { v4 as uuidv4 } from 'uuid';
-import { useForm, FieldErrors} from 'react-hook-form';
-import { createBoard } from './boardsSlice';
+import { useForm, FieldErrors } from 'react-hook-form';
+import { createBoard, deleteBoard } from './boardsSlice';
 
 interface FormData {
     boardName: string;
     additionalFields: string[];
 }
 
+/**
+ * Creating an interface for the expected props of the add/edit dialog for boards. Data is an optional prop that determines whether we are editing or creating.
+ */
 interface FormDialogProps {
     open: boolean;
+    data?: any;
     onClose: () => void;
 }
 
-export default function FormDialog({ open, onClose }: FormDialogProps) {
+export default function FormDialog({ open, data, onClose }: FormDialogProps) {
     const dispatch = useAppDispatch();
+    const editing = data ? true : false;
 
     const {
         register,
@@ -39,7 +44,7 @@ export default function FormDialog({ open, onClose }: FormDialogProps) {
 
     const handleAddField = () => {
         setValue('additionalFields', [...additionalFields, '']);
-    };
+    }
 
     const handleRemoveField = (index: number) => {
         setValue(
@@ -48,22 +53,35 @@ export default function FormDialog({ open, onClose }: FormDialogProps) {
         );
     };
 
-    const onSubmit = handleSubmit(({boardName, additionalFields}) => {
-        dispatch(createBoard({boardName, lists: additionalFields as string[]}));
+    const onSubmit = handleSubmit(async ({ boardName, additionalFields }) => {
+        if (data) {
+            await dispatch(deleteBoard(data.currentBoard.id));
+        }
+
+        dispatch(createBoard({ boardName, lists: additionalFields }));
+
         reset();
         onClose();
     });
 
+    /**
+     * Adding exisiting data to textfields if provided to the dialog component.
+     */
     React.useEffect(() => {
-        handleAddField();
-    }, [])
+        if (data) {
+            setValue('boardName', data.currentBoard.name);
+            data.lists.forEach((list: any, index: number) => {
+                setValue(`additionalFields.${index}`, list.name);
+            });
+        }
+    }, [data]);
 
 
     return (
         <div>
             <Dialog fullWidth maxWidth={'xs'} open={open} onClose={onClose}>
                 <form onSubmit={onSubmit}>
-                    <DialogTitle fontWeight={700}>Add New Board</DialogTitle>
+                    <DialogTitle fontWeight={700}>{editing ? "Edit" : "Add"} New Board</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Name
