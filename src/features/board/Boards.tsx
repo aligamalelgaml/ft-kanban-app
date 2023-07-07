@@ -84,7 +84,7 @@ export function Boards() {
               )}
 
               <Grid item>
-                <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: '#E4EBFA', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
+                <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: 'background.contrasted', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
                   + New Column
                 </Paper>
               </Grid>

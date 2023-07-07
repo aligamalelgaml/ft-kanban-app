@@ -319,6 +319,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
     background: {
       default: mode === 'light' ? '#F4F7FD' : '#121721',
       paper: mode === 'light' ? '#FFFFFF' : '#2B2C37',
+      contrasted: mode === 'light' ?  "#E4EBFA" : "rgba(43, 44, 55, 0.25)",
     },
     text: {
       primary: mode === 'light' ? "#000112" : '#FFFFFF',
