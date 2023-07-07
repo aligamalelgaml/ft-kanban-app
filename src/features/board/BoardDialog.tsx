@@ -132,7 +132,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
                     <Stack gap={3} sx={{ padding: "30px" }}>
                         <Button variant='contained' color='secondary' sx={{ color: "primary.main", textTransform: "none", fontSize: "13px", fontWeight: "700", borderRadius: "50px" }} onClick={handleAddField}>+ Add New Column</Button>
 
-                        <Button type='submit' sx={{ textTransform: "none", fontSize: "13px", fontWeight: "700", borderRadius: "50px" }} variant='contained'>Create New Board</Button>
+                        <Button type='submit' sx={{ textTransform: "none", fontSize: "13px", fontWeight: "700", borderRadius: "50px" }} variant='contained'> {data? "Save Changes" : "Create New Board"}</Button>
                     </Stack>
                 </form>
             </Dialog>

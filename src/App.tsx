@@ -17,6 +17,7 @@ import { Boards } from './features/board/Boards';
 import { useAppSelector, useAppDispatch } from './app/hooks';
 import { setCurrentBoard, selectBoards, selectCurrentBoard } from './features/board/boardsSlice';
 import BoardDialog from './features/board/BoardDialog';
+import AddCard from './features/card/AddCard';
 
 
 /* #region APP BAR / DRAWER STYLING  */
@@ -103,25 +104,30 @@ function App() {
 
   return (
     <>
-      <BoardDialog open={boardDialogeOpen} onClose={handleBoardDialogeClose}/>
+      <BoardDialog open={boardDialogeOpen} onClose={handleBoardDialogeClose} />
 
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
 
         <AppBar position="fixed" elevation={0} open={open}>
-          <Toolbar sx={{ backgroundColor: theme.palette.background.paper, color: "text.primary" }}>
+          <Toolbar sx={{ backgroundColor: theme.palette.background.paper, color: "text.primary", justifyContent: "space-between" }}>
 
-            {!open &&
-              <>
-                <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} />
-                <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
-                <Divider orientation="vertical" flexItem sx={{ mx: "20px" }} />
-              </>
-            }
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {!open &&
+                <>
+                  <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} />
+                  <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
+                  <Divider orientation="vertical" flexItem sx={{ mx: "20px" }} />
+                </>
+              }
 
-            <Typography variant="h6" fontWeight={800} noWrap component="div">
-              {currentBoard.name}
-            </Typography>
+              <Typography variant="h6" fontWeight={800} noWrap component="div">
+                {currentBoard.name}
+              </Typography>
+            </div>
+
+            <AddCard/>
+
 
           </Toolbar>
         </AppBar>
@@ -156,7 +162,7 @@ function App() {
             </Box>
 
             <List>
-              {boards.map((board) =>
+              {boards.map((board: any) =>
                 <ListItem sx={{ width: "85%" }} key={board.id} disablePadding>
                   <ListItemButton onClick={() => dispatch(setCurrentBoard(board))} selected={board.id === currentBoard.id}
                     sx={{
@@ -185,7 +191,7 @@ function App() {
                       },
                     }}
                   >
-                    <ListItemIcon style={{minWidth: '35px'}}>
+                    <ListItemIcon style={{ minWidth: '35px' }}>
                       <TableChartIcon />
                     </ListItemIcon>
                     <ListItemText primary={board.name} />
@@ -194,42 +200,42 @@ function App() {
               )}
 
               <ListItem sx={{ width: "85%" }} disablePadding>
-                  <ListItemButton onClick={() => handleAddBoard()}
-                    sx={{
-                      fontSize: "15px",
-                      fontWeight: "700",
-                      whiteSpace: "nowrap",
-                      color: "primary.main",
-                      width: "85%",
-                      borderRadius: "0px 20px 20px 0px",
-                      '& .MuiListItemIcon-root': {
-                        color: "primary.main"
+                <ListItemButton onClick={() => handleAddBoard()}
+                  sx={{
+                    fontSize: "15px",
+                    fontWeight: "700",
+                    whiteSpace: "nowrap",
+                    color: "primary.main",
+                    width: "85%",
+                    borderRadius: "0px 20px 20px 0px",
+                    '& .MuiListItemIcon-root': {
+                      color: "primary.main"
+                    },
+                    '&:hover': { // colors on hover
+                      backgroundColor: 'secondary.main',
+                      '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                        color: 'primary.main',
                       },
-                      '&:hover': { // colors on hover
+                    },
+                    '&.Mui-selected': { // colors when selected
+                      backgroundColor: 'primary.main',
+                      '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
+                        color: '#FFFFFF',
+                      }, '&:hover': { // colors on hover & selected
                         backgroundColor: 'secondary.main',
                         '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
                           color: 'primary.main',
                         },
                       },
-                      '&.Mui-selected': { // colors when selected
-                        backgroundColor: 'primary.main',
-                        '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
-                          color: '#FFFFFF',
-                        }, '&:hover': { // colors on hover & selected
-                          backgroundColor: 'secondary.main',
-                          '& .MuiListItemText-primary, & .MuiListItemIcon-root': {
-                            color: 'primary.main',
-                          },
-                        },
-                      },
-                    }}
-                  >
-                    <ListItemIcon style={{minWidth: '35px'}}>
-                      <TableChartIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={"+ Create New Board"} />
-                  </ListItemButton>
-                </ListItem>
+                    },
+                  }}
+                >
+                  <ListItemIcon style={{ minWidth: '35px' }}>
+                    <TableChartIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"+ Create New Board"} />
+                </ListItemButton>
+              </ListItem>
             </List>
 
           </div>

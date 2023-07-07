@@ -9,6 +9,7 @@ interface Card {
   name: string;
   idBoard: string;
   idList: string;
+  desc: string;
 }
 
 export interface CardState {
@@ -44,6 +45,21 @@ export const fetchCards = createAsyncThunk(
   }
 );
 
+export const addCard = createAsyncThunk(
+  'card/createCard',
+  async (card: { title: string, desc?: string, listID: string }, { dispatch }) => {
+    console.log("creating card:", card.title)
+
+    // Encoding name and description to ensure they are URL-safe.
+    const encodedTitle = encodeURIComponent(card.title);
+    const encodedDesc = card.desc ? encodeURIComponent(card.desc) : '';
+    
+    const response = await axios.post(`https://api.trello.com/1/cards?idList=${card.listID}&name=${encodedTitle}&desc=${encodedDesc}&key=${key}&token=${token}`)
+
+    return response.data;
+  }
+);
+
 export const cardSlice = createSlice({
   name: 'card',
   initialState,
@@ -60,18 +76,6 @@ export const cardSlice = createSlice({
       .addCase(fetchCards.fulfilled, (state, action) => {
         state.status = 'idle';
         state.cards = action.payload;
-        // action.payload.forEach((card: Card) => {
-        //   const { idList, id } = card;
-
-        //   if (!state.cards[idList]) {
-        //     state.cards[idList] = [];
-        //   }
-
-        //   const existingCard = state.cards[idList].find((c) => c.id === id);
-        //   if (!existingCard) {
-        //     state.cards[idList].push({id: card.id, name: card.name, idBoard: card.idBoard, idList: card.idList});
-        //   }
-        // });
       })
       .addCase(fetchCards.rejected, (state) => {
         state.status = 'failed';

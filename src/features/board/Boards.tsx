@@ -77,7 +77,7 @@ export function Boards() {
             <Stack gap={10} direction={"row"}>
               {lists.map((list) => {
                 return list.idBoard === currentBoard.id &&
-                  <Grid key={list.id} item xs={12} md={4}>
+                  <Grid key={list.id} item maxWidth={500}>
                     <List list={list} />
                   </Grid>
               }
