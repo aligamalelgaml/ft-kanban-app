@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
 import { selectLists, fetchLists, selectListStatus } from '../list/listSlice';
 import { selectCards, fetchCards } from '../card/cardSlice';
-import { Button, Box, Typography, Stack, Grid, Card } from '@mui/material';
+import { Button, Box, Typography, Stack, Grid, Card, Paper } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import List from '../list/List';
 import BoardDialog from './BoardDialog';
@@ -46,12 +46,8 @@ export function Boards() {
 
   return (
     <>
-      <Button onClick={handleEditBoardDialog} sx={{ width: "10vw", borderRadius: "50px", textTransform: "none", fontSize: "15px", fontWeight: "700" }} variant='contained'>
-        + Add New Column
-      </Button>
-
       <BoardDialog key={uuidv4()} open={openEditBoardDialog} data={{ currentBoard, lists }} onClose={handleCloseEditBoardDialog} />
-
+      
       {loadingLists === true ?
         <Box sx={{ display: 'flex', justifyContent: 'center', marginY: "30vh" }}>
           <CircularProgress />
@@ -78,7 +74,7 @@ export function Boards() {
           }
 
           {!loadingLists &&
-            <Grid container spacing={2}>
+            <Stack gap={10} direction={"row"}>
               {lists.map((list) => {
                 return list.idBoard === currentBoard.id &&
                   <Grid key={list.id} item xs={12} md={4}>
@@ -86,8 +82,15 @@ export function Boards() {
                   </Grid>
               }
               )}
-            </Grid>
+
+              <Grid item>
+                <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: '#E4EBFA', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
+                  + New Column
+                </Paper>
+              </Grid>
+            </Stack>
           }
+
         </>
       }
 

@@ -10,14 +10,8 @@ interface ListProps {
     list: { id: string, name: string, idBoard: string };
 }
 
-
 export default React.memo(({ list }: ListProps) => {
-    const currentBoard = useAppSelector(selectCurrentBoard);
-    const dispatch = useAppDispatch();
-
-    console.log("card list", list.name);
-
-
+    
     return (
         <Stack gap={2}>
             <CardTasks listID={list.id} listName={list.name}/>

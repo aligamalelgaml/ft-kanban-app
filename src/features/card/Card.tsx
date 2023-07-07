@@ -22,7 +22,7 @@ export default function CardTasks({ listID, listName }: CardProps) {
         <>
             <Stack gap={1} direction={"row"} alignItems={"center"}>
                 <CircleIcon sx={{ color: color, fontSize: "15px" }} />
-                <Typography letterSpacing={2.4} textTransform={"uppercase"} fontWeight={700} color={"text.secondary"} fontSize={12}> {listName} ({cards.length}) </Typography>
+                <Typography letterSpacing={2.4} textTransform={"uppercase"} noWrap fontWeight={700} color={"text.secondary"} fontSize={12}> {listName} ({cards.length}) </Typography>
             </Stack>
 
             {cards.map((card) =>
