@@ -19,20 +19,24 @@ export function Boards() {
   const loadingLists = useAppSelector(selectListStatus) === "loading";
   const dispatch = useAppDispatch();
 
+// WIP: Refactoring so that App intially fetches board instead and passes list to Board as a prop.
 
   /**
    * Initial call to fetch all user boards + switches to new board upon new board creation, also fetchs user lists (columns) once currentBoard changes.
    */
   useEffect(() => {
-    dispatch(fetchBoards());
+    dispatch(fetchBoards())
     if (currentBoard.id !== "") {
       dispatch(fetchLists(currentBoard.id));
     }
   }, [currentBoard])
 
-  useEffect(() => {
-      dispatch(fetchCards(lists));
-  }, [lists])
+ 
+  // useEffect(() => {
+  //   if (currentBoard.id !== "") {
+  //     dispatch(fetchCards(lists));
+  //   }
+  // }, [lists])
 
 
   const handleEditBoardDialog = () => {

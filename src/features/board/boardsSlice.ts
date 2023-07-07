@@ -93,7 +93,7 @@ export const boardSlice = createSlice({
       })
       .addCase(deleteBoard.rejected, (state) => {
         state.status = 'failed';
-        throw new Error("Board deletion failed!")
+        // throw new Error("Board deletion failed!")
       });
   },
 });

@@ -58,7 +58,9 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
             await dispatch(deleteBoard(data.currentBoard.id));
         }
 
-        dispatch(createBoard({ boardName, lists: additionalFields }));
+        console.log("adding", boardName, additionalFields )
+
+        dispatch(createBoard({ boardName, lists: additionalFields || [] }));
 
         reset();
         onClose();
