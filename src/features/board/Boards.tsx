@@ -21,19 +21,11 @@ export function Boards() {
 
 
   /**
-   * Initial call to fetch all user boards + switches to new board upon new board creation, also fetchs user lists (columns) once currentBoard changes.
+   * Initial call to fetch all user boards + switches to new board upon new board creation, also fetchs user lists (columns) once currentBoard changes then fetches cards.
    */
-  // useEffect(() => {
-  //   dispatch(fetchBoards())
-  //   if (currentBoard.id !== "") {
-  //     dispatch(fetchLists(currentBoard.id));
-  //     dispatch(fetchCards(lists));
-  //   }
-  // }, [currentBoard])
-
   useEffect(() => {
     dispatch(fetchBoards());
-  
+
     if (currentBoard.id !== "") {
       dispatch(fetchLists(currentBoard.id)).then((action) => {
         if (action.type === fetchLists.fulfilled.type) {
