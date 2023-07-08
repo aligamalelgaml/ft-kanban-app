@@ -44,8 +44,6 @@ export function Boards() {
     setOpenEditBoardDialog(false);
   }
 
-  console.log(currentBoard)
-
   return (
     <>
       {currentBoard.id !== "" &&

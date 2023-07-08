@@ -54,13 +54,14 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
     };
 
     const onSubmit = handleSubmit(async ({ boardName, additionalFields }) => {
-        if (data) {
-            await dispatch(deleteBoard(data.currentBoard.id));
-        }
+        // WIP: refactoring list/board edition to utilize PUT instead of destroying then creating boards which causes loss of cards (tasks) on list renaming.
+        // if (data) {
+        //     await dispatch(deleteBoard(data.currentBoard.id));
+        // }
 
         console.log("adding", boardName, additionalFields )
 
-        dispatch(createBoard({ boardName, lists: additionalFields || [] }));
+        // dispatch(createBoard({ boardName, lists: additionalFields || [] }));
 
         reset();
         onClose();
