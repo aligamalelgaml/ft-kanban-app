@@ -5,7 +5,8 @@ import { Button, Box, Typography, Stack, Grid, Card } from '@mui/material';
 import { selectCards, fetchCards } from './cardSlice';
 import CardDetails from './CardDetails';
 import CircleIcon from '@mui/icons-material/Circle';
-import { v4 as uuidv4 } from 'uuid';
+import CardDialog from './CardDialog';
+
 
 const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase();
 
@@ -16,33 +17,36 @@ interface CardProps {
 
 export default function CardTasks({ listID, listName }: CardProps) {
     const [color] = useState(() => getRandomColor());
-    const [openCardDetailsDialog, setOpenCardDetailsDialog] = useState("");
-    const currentBoard = useAppSelector(selectCurrentBoard);
+    const [selectedCard, setSelectedCard] = useState<any>("");
     const cards = useAppSelector((state) => selectCards(state, listID));
-    const dispatch = useAppDispatch();
+    const [openEditCardDialog, setOpenEditCardDialog] = React.useState(false);
+    const [openCardDetailsDialog, setOpenCardDetailsDialog] = React.useState(false);
 
-    const handleOpenCardDetails = (card: any) => {
-        setOpenCardDetailsDialog(card);
+    const openEditDialog = () => {
+        setOpenEditCardDialog(true);
     }
 
-    const handleCloseCardDetails = () => {
-        setOpenCardDetailsDialog("");
-    }
+    useEffect(() => {
+        setOpenCardDetailsDialog(true);
+    }, [selectedCard])
+
 
     return (
         <>
-            {!!openCardDetailsDialog && <CardDetails open={!!openCardDetailsDialog} onClose={handleCloseCardDetails} card={openCardDetailsDialog} />}
-
             <Stack gap={1} direction={"row"} alignItems={"center"}>
                 <CircleIcon sx={{ color: color, fontSize: "15px" }} />
                 <Typography letterSpacing={2.4} textTransform={"uppercase"} noWrap fontWeight={700} color={"text.secondary"} fontSize={12}> {listName} ({cards.length}) </Typography>
             </Stack>
 
             {cards.map((card) =>
-                <Card onClick={() => handleOpenCardDetails(card)} key={card.id} elevation={3} sx={{ padding: "20px" }}>
+                <Card onClick={() => setSelectedCard(card)} key={card.id} elevation={3} sx={{ padding: "20px" }}>
                     <Typography fontWeight={700} fontSize={15}> {card.name} </Typography>
                 </Card>)}
 
+            {!!selectedCard && <>
+                <CardDialog open={openEditCardDialog} onClose={() => setOpenEditCardDialog(false)} data={selectedCard}/>
+                <CardDetails open={openCardDetailsDialog} onClose={() => setOpenCardDetailsDialog(false)} openEditDialog={openEditDialog} card={selectedCard} />
+            </>}
         </>
     );
 }

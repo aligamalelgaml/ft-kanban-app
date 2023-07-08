@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { selectCurrentBoard } from '../board/boardsSlice';
+import React, { useState } from 'react';
+import { useAppSelector } from '../../app/hooks';
 import { selectLists } from '../list/listSlice';
-import { Button, Box, Typography, Stack, Grid, Card } from '@mui/material';
+import { Button } from '@mui/material';
 import CardDialog from './CardDialog';
 
 export default function AddCard() {
     const [openTaskDialog, setOpenTaskDialog] = useState(false);
-    const currentBoard = useAppSelector(selectCurrentBoard);
     const currentLists = useAppSelector(selectLists)
 
     const handleOpenTaskDialog = () => {

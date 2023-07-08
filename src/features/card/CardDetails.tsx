@@ -20,9 +20,10 @@ interface FormDialogProps {
     open: boolean;
     card: any;
     onClose: () => void;
+    openEditDialog: () => void;
 }
 
-export default function CardDetails({ open, card, onClose }: FormDialogProps) {
+export default function CardDetails({ open, card, onClose, openEditDialog }: FormDialogProps) {
     const lists = useAppSelector(selectLists);
     const dispatch = useAppDispatch();
     const { register } = useForm();
@@ -50,7 +51,7 @@ export default function CardDetails({ open, card, onClose }: FormDialogProps) {
                     </div>
 
                     <div>
-                        <CardMoreDropdown card={card} onClose={onClose}/>
+                        <CardMoreDropdown card={card} openEditDialog={openEditDialog} onClose={onClose}/>
                     </div>
 
                 </DialogTitle>

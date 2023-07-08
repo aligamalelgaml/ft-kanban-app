@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { selectLists } from '../list/listSlice';
-import { addCard, fetchCards, updateCard } from '../card/cardSlice';
+import { addCard, fetchCards, updateCard, selectAllCards } from '../card/cardSlice';
 import { IconButton, Box, Stack, MenuItem, FormControl, Select, InputLabel } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +23,15 @@ interface FormDialogProps {
 export default function CardDialog({ open, data, onClose }: FormDialogProps) {
     const dispatch = useAppDispatch();
     const lists = useAppSelector(selectLists);
+    const allCards = useAppSelector(selectAllCards);
     const editing = data ? true : false;
+
+    /**
+     * Object.values(allCards) is used to get an array of the values from allCards. Then we use the flat() method to flatten the nested arrays into a single array.
+     * After that, we use the find() method to search for the card object with a matching id property. If a matching card is found, it is stored in the foundCard variable.
+     * This ensures that any changes the user makes during viewing card details (specifically, changing it's status) is correctly reflected in the card/task edit dialog.
+     */
+    const latestData = data ? Object.values(allCards).flat().find((card) => card.id === data.id) : null;
 
     const {
         register,
@@ -57,8 +65,8 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
      */
     React.useEffect(() => {
         if (data) {
-            setValue('title', data.name);
-            setValue('desc', data.desc);
+            setValue('title', latestData? latestData.name : "");
+            setValue('desc', latestData? latestData.desc : "");
         }
     }, [data]);
 
@@ -67,7 +75,7 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
         <div>
             <Dialog fullWidth maxWidth={'xs'} open={open} onClose={onClose}>
                 <form onSubmit={onSubmit}>
-                    <DialogTitle fontWeight={700}>{editing ? "Edit" : "Add"} New Task</DialogTitle>
+                    <DialogTitle fontWeight={700}>{editing ? "Edit" : "Add New"} Task</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Title
@@ -106,7 +114,7 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
                             select
                             required
                             fullWidth
-                            defaultValue={data ? data.idList : ''}
+                            defaultValue={latestData ? latestData?.idList : ''}
                             inputProps={register('listID')}
                         >
                             {lists.map((list) => (

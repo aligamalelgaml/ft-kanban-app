@@ -61,8 +61,8 @@ export const addCard = createAsyncThunk(
 )
 
 export const updateCard = createAsyncThunk(
-  'card/createCard',
-  async (updatedCard: {id: string, title: string, desc: string, listID: string }, { dispatch }) => {
+  'card/updateCard',
+  async (updatedCard: {id: string, title: string, desc: string, listID: string }) => {
     console.log("updating card:", updatedCard.title)
 
     // Encoding optional name and description to ensure they are URL-safe.
@@ -75,10 +75,16 @@ export const updateCard = createAsyncThunk(
   }
 );
 
+export const deleteCard = createAsyncThunk(
+  'card/deleteCard',
+  async (cardID: string) => {
+    console.log("deleting card:", cardID)
 
+    const response = await axios.delete(`https://api.trello.com/1/cards/${cardID}?key=${key}&token=${token}`);
 
-
-
+    return response.data;
+  }
+);
 
 export const cardSlice = createSlice({
   name: 'card',
@@ -106,6 +112,8 @@ export const cardSlice = createSlice({
 export const { editCard } = cardSlice.actions;
 
 const selectCardState: ParametricSelector<RootState, unknown, CardState> = (state) => state.card;
+
+export const selectAllCards = (state: RootState) => state.card.cards;
 
 export const selectCards = createSelector(
   selectCardState,

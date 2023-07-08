@@ -3,34 +3,51 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import CardDialog from './CardDialog';
+import { deleteCard, fetchCards } from './cardSlice';
+import { selectLists } from '../list/listSlice';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-export default function CardMoreDropdown({ card, onClose } : any) {
+export default function CardMoreDropdown({ card, openEditDialog, onClose } : any) {
+    const dispatch = useAppDispatch();
+    const lists = useAppSelector(selectLists);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const [openEditCardDialog, setOpenEditCardDialog] = React.useState(false);
 
+    /**
+     * Opens the dropdown menu at menu location.
+     * @param event Button click event
+     */
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     }
 
+    /**
+     * Closes the dropdown menu
+     */
     const handleClose = () => {
         setAnchorEl(null);
     }
 
-    const closeEditDialog = () => {
-        setOpenEditCardDialog(false);
+    /**
+     * Closes the details modal and enables the edit dialog.
+     */
+    const handleOpenEditDialog = () => {
+        openEditDialog();
+        onClose();
     }
 
-    React.useEffect(() => {
-        if(openEditCardDialog) {
-            onClose();
-        }
-    }, [openEditCardDialog])
+    const handleDeleteTask = () => {
+        dispatch(deleteCard(card.id)).then((action) => {
+            if(action.type === deleteCard.fulfilled.type) {
+                dispatch(fetchCards(lists));
+            }
+        })
+
+        onClose();
+    }
 
     return (
         <>
-            <CardDialog open={openEditCardDialog} onClose={closeEditDialog} data={card}/>
 
             <Button
                 id="basic-button"
@@ -56,8 +73,8 @@ export default function CardMoreDropdown({ card, onClose } : any) {
                     },
                 }}
             >
-                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} onClick={() => setOpenEditCardDialog(true)}>Edit Task</MenuItem>
-                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleClose}>Delete Task</MenuItem>
+                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} onClick={handleOpenEditDialog}>Edit Task</MenuItem>
+                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleDeleteTask}>Delete Task</MenuItem>
             </Menu>
         </>
     );
