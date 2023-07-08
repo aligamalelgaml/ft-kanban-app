@@ -76,8 +76,8 @@ export default function BoardMoreDropdown() {
                     },
                 }}
             >
-                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} onClick={() => setOpenBoardEditDialog(true)} >Edit Board</MenuItem>
-                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleDeleteBoard}>Delete Board</MenuItem>
+                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "600" }} disabled={currentBoard.id === ""} onClick={() => setOpenBoardEditDialog(true)} >Edit Board</MenuItem>
+                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "600" }} disabled={currentBoard.id === ""} onClick={handleDeleteBoard}>Delete Board</MenuItem>
             </Menu>
         </>
     );

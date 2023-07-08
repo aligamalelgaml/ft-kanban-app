@@ -83,7 +83,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
         <div>
             <Dialog fullWidth maxWidth={'xs'} open={open} onClose={onClose}>
                 <form onSubmit={onSubmit}>
-                    <DialogTitle fontWeight={700}>{editing ? "Edit" : "Add"} New Board</DialogTitle>
+                    <DialogTitle fontWeight={700}>{editing ? "Edit" : "Add New"} Board</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Name
