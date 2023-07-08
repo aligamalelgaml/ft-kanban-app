@@ -58,7 +58,27 @@ export const addCard = createAsyncThunk(
 
     return response.data;
   }
+)
+
+export const updateCard = createAsyncThunk(
+  'card/createCard',
+  async (updatedCard: {id: string, title: string, desc: string, listID: string }, { dispatch }) => {
+    console.log("updating card:", updatedCard.title)
+
+    // Encoding optional name and description to ensure they are URL-safe.
+    const encodedTitle = encodeURIComponent(updatedCard.title);
+    const encodedDesc = encodeURIComponent(updatedCard.desc);
+    
+    const response = await axios.put(`https://api.trello.com/1/cards/${updatedCard.id}?name=${encodedTitle}&desc=${encodedDesc}&idList=${updatedCard.listID}&key=${key}&token=${token}`);
+
+    return response.data;
+  }
 );
+
+
+
+
+
 
 export const cardSlice = createSlice({
   name: 'card',

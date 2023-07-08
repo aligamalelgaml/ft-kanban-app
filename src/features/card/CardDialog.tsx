@@ -12,7 +12,7 @@ import { addCard, fetchCards } from '../card/cardSlice';
 import { IconButton, Box, Stack, MenuItem, FormControl, Select, InputLabel } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { v4 as uuidv4 } from 'uuid';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 interface FormDialogProps {
     open: boolean;
