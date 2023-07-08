@@ -128,6 +128,8 @@ function App() {
 
             <AddCard/>
 
+            
+
 
           </Toolbar>
         </AppBar>
@@ -319,6 +321,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
     background: {
       default: mode === 'light' ? '#F4F7FD' : '#121721',
       paper: mode === 'light' ? '#FFFFFF' : '#2B2C37',
+      more: mode === 'light' ? '#FFFFFF' : '#20212C',
       contrasted: mode === 'light' ?  "#E4EBFA" : "rgba(43, 44, 55, 0.25)",
     },
     text: {

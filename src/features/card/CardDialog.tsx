@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { selectLists } from '../list/listSlice';
-import { addCard, fetchCards } from '../card/cardSlice';
+import { addCard, fetchCards, updateCard } from '../card/cardSlice';
 import { IconButton, Box, Stack, MenuItem, FormControl, Select, InputLabel } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,9 +21,8 @@ interface FormDialogProps {
 }
 
 export default function CardDialog({ open, data, onClose }: FormDialogProps) {
-    const lists = useAppSelector(selectLists);
-
     const dispatch = useAppDispatch();
+    const lists = useAppSelector(selectLists);
     const editing = data ? true : false;
 
     const {
@@ -34,17 +33,20 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
         reset,
     } = useForm();
 
-
     const onSubmit = handleSubmit(async (newData) => {
         if (data) {
-            // await dispatch(deleteTask(data.currentBoard.id));
+            dispatch(updateCard({ id: data.id, title: newData.title, desc: newData.desc, listID: newData.listID })).then((action) => {
+                if (action.type === updateCard.fulfilled.type) {
+                    dispatch(fetchCards(lists))
+                }
+            });
+        } else {
+            dispatch(addCard({ title: newData.title, desc: newData.desc, listID: newData.listID })).then((action) => {
+                if (action.type === addCard.fulfilled.type) {
+                    dispatch(fetchCards(lists));
+                }
+            });
         }
-
-        dispatch(addCard({title: newData.title, desc: newData.desc, listID: newData.listID})).then((action) =>{
-            if(action.type === addCard.fulfilled.type) {
-                dispatch(fetchCards(lists));
-            }
-        } );
 
         reset();
         onClose();
@@ -53,14 +55,12 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
     /**
      * Adding exisiting data to textfields if provided to the dialog component.
      */
-    // React.useEffect(() => {
-    //     if (data) {
-    //         setValue('boardName', data.currentBoard.name);
-    //         data.lists.forEach((list: any, index: number) => {
-    //             setValue(`additionalFields.${index}`, list.name);
-    //         });
-    //     }
-    // }, [data]);
+    React.useEffect(() => {
+        if (data) {
+            setValue('title', data.name);
+            setValue('desc', data.desc);
+        }
+    }, [data]);
 
 
     return (
@@ -106,7 +106,7 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
                             select
                             required
                             fullWidth
-                            defaultValue=''
+                            defaultValue={data ? data.idList : ''}
                             inputProps={register('listID')}
                         >
                             {lists.map((list) => (

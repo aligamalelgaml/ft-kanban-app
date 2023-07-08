@@ -13,6 +13,7 @@ import { IconButton, Box, Stack, MenuItem, FormControl, Select, InputLabel } fro
 import ClearIcon from '@mui/icons-material/Clear';
 import { v4 as uuidv4 } from 'uuid';
 import { useForm } from 'react-hook-form';
+import CardMoreDropdown from './CardMoreDropdown';
 
 
 interface FormDialogProps {
@@ -24,58 +25,60 @@ interface FormDialogProps {
 export default function CardDetails({ open, card, onClose }: FormDialogProps) {
     const lists = useAppSelector(selectLists);
     const dispatch = useAppDispatch();
+    const { register } = useForm();
 
-    console.log(card);
-
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-        reset,
-    } = useForm();
-
+    /**
+     * Updates a card's parent list ID by making a PUT request with the new list ID then calling fetchCards in order to rerender card columns.
+     * @param event | Event.value evalutes to a string equivelant to the newly selected list ID.
+     */
     const handleChangeList = (event: React.ChangeEvent<{ value: string }>) => {
         const selectedListID = event.target.value;
-        setValue('listID', selectedListID);
 
-        dispatch(updateCard({id: card.id, title: card.name, desc: card.desc, listID: selectedListID})).then((action) => {
-            if(action.type === updateCard.fulfilled.type) {
+        dispatch(updateCard({ id: card.id, title: card.name, desc: card.desc, listID: selectedListID })).then((action) => {
+            if (action.type === updateCard.fulfilled.type) {
                 dispatch(fetchCards(lists))
             }
         });
     };
 
     return (
-        <div>
-            <Dialog fullWidth maxWidth={'xs'} open={open} onClose={onClose}>
-                <DialogContent>
-                    <DialogTitle sx={{ fontSize: "18px", fontWeight: "700" }}>{card.name}</DialogTitle>
-                    <DialogContentText color={"text.secondary"}>
-                        {card.desc}
-                    </DialogContentText>
-                    <DialogContentText color={"text.primary"} mt={3} mb={1} fontWeight={700}>
-                        Current Status
-                    </DialogContentText>
+        <Dialog fullWidth maxWidth={'xs'} open={open} onClose={onClose}>
+            <DialogContent>
+                <DialogTitle sx={{ p: "0", fontSize: "18px", fontWeight: "700", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                        {card.name}
+                    </div>
 
-                    <TextField
-                        select
-                        required
-                        fullWidth
-                        onChange={handleChangeList}
-                        defaultValue={card.idList}
-                        inputProps={register('listID')}
-                    >
-                        {lists.map((list) => (
-                            <MenuItem key={uuidv4()} value={list.id}>
-                                {list.name}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <div>
+                        <CardMoreDropdown card={card} onClose={onClose}/>
+                    </div>
 
-                </DialogContent>
+                </DialogTitle>
 
-            </Dialog>
-        </div>
+                <DialogContentText mt={2} color={"text.secondary"}>
+                    {card.desc}
+                </DialogContentText>
+                <DialogContentText color={"text.primary"} mt={3} mb={1} fontWeight={700}>
+                    Current Status
+                </DialogContentText>
+
+                <TextField
+                    select
+                    required
+                    fullWidth
+                    onChange={handleChangeList}
+                    defaultValue={card.idList}
+                    inputProps={register('listID')}
+                >
+                    {lists.map((list) => (
+                        <MenuItem key={uuidv4()} value={list.id}>
+                            {list.name}
+                        </MenuItem>
+                    ))}
+                </TextField>
+
+            </DialogContent>
+
+        </Dialog>
     );
 }

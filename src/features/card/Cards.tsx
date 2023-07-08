@@ -31,7 +31,8 @@ export default function CardTasks({ listID, listName }: CardProps) {
 
     return (
         <>
-        <CardDetails open={openCardDetailsDialog === "" ? false : true} onClose={handleCloseCardDetails} card={openCardDetailsDialog}/>
+            {!!openCardDetailsDialog && <CardDetails open={!!openCardDetailsDialog} onClose={handleCloseCardDetails} card={openCardDetailsDialog} />}
+
             <Stack gap={1} direction={"row"} alignItems={"center"}>
                 <CircleIcon sx={{ color: color, fontSize: "15px" }} />
                 <Typography letterSpacing={2.4} textTransform={"uppercase"} noWrap fontWeight={700} color={"text.secondary"} fontSize={12}> {listName} ({cards.length}) </Typography>
@@ -41,6 +42,7 @@ export default function CardTasks({ listID, listName }: CardProps) {
                 <Card onClick={() => handleOpenCardDetails(card)} key={card.id} elevation={3} sx={{ padding: "20px" }}>
                     <Typography fontWeight={700} fontSize={15}> {card.name} </Typography>
                 </Card>)}
+
         </>
     );
 }

@@ -16,7 +16,7 @@ export default function AddCard() {
 
     return (
         <>
-        <CardDialog open={openTaskDialog} onClose={() => setOpenTaskDialog(false)}/>
+            <CardDialog open={openTaskDialog} onClose={() => setOpenTaskDialog(false)} />
 
             <div style={{ display: "flex", alignItems: "center" }}>
                 <Button onClick={handleOpenTaskDialog} variant='contained' sx={{ textTransform: "none", fontSize: "15px", fontWeight: "700", borderRadius: "50px", pointerEvents: currentLists.length === 0 ? "none" : "auto" }}>+ Add New Task</Button>
