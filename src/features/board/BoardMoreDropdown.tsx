@@ -7,13 +7,18 @@ import { fetchLists, selectLists } from '../list/listSlice';
 import { deleteBoard, fetchBoards, selectCurrentBoard, setCurrentBoard } from '../board/boardsSlice'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { IconButton } from '@mui/material';
+import BoardDialog from './BoardDialog'
+import { v4 as uuidv4 } from 'uuid';
+
 
 export default function BoardMoreDropdown() {
     const dispatch = useAppDispatch();
     const currentBoard = useAppSelector(selectCurrentBoard);
     const lists = useAppSelector(selectLists);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const [openBoardEditDialog, setOpenBoardEditDialog]= React.useState(false);
 
     /**
      * Opens the dropdown menu at menu location.
@@ -30,13 +35,6 @@ export default function BoardMoreDropdown() {
         setAnchorEl(null);
     }
 
-    /**
-     * Closes the modal 
-     */
-    const handleOpenEditDialog = () => {
-        // onClose();
-    }
-
     const handleDeleteBoard = () => {
         dispatch(deleteBoard(currentBoard.id)).then((action) => {
             if (action.type === deleteBoard.fulfilled.type) {
@@ -46,8 +44,14 @@ export default function BoardMoreDropdown() {
         handleClose();
     };
 
+    const handleBoardDialogeClose = () => {
+        setOpenBoardEditDialog(false);
+    }
+
     return (
         <>
+            <BoardDialog key={uuidv4()} open={openBoardEditDialog} data={{ currentBoard, lists }} onClose={handleBoardDialogeClose} />
+
             <IconButton id="boardDropdownIcon"
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
@@ -72,7 +76,7 @@ export default function BoardMoreDropdown() {
                     },
                 }}
             >
-                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} >Edit Board</MenuItem>
+                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} onClick={() => setOpenBoardEditDialog(true)} >Edit Board</MenuItem>
                 <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleDeleteBoard}>Delete Board</MenuItem>
             </Menu>
         </>
