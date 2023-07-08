@@ -3,12 +3,14 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { deleteCard, fetchCards } from './cardSlice';
-import { selectLists } from '../list/listSlice';
+import { fetchLists, selectLists } from '../list/listSlice';
+import { deleteBoard, fetchBoards, selectCurrentBoard, setCurrentBoard } from '../board/boardsSlice'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { IconButton } from '@mui/material';
 
-export default function CardMoreDropdown({ card, openEditDialog, onClose } : any) {
+export default function BoardMoreDropdown() {
     const dispatch = useAppDispatch();
+    const currentBoard = useAppSelector(selectCurrentBoard);
     const lists = useAppSelector(selectLists);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -29,51 +31,49 @@ export default function CardMoreDropdown({ card, openEditDialog, onClose } : any
     }
 
     /**
-     * Closes the details modal and enables the edit dialog.
+     * Closes the modal 
      */
     const handleOpenEditDialog = () => {
-        openEditDialog();
-        onClose();
+        // onClose();
     }
 
-    const handleDeleteTask = () => {
-        dispatch(deleteCard(card.id)).then((action) => {
-            if(action.type === deleteCard.fulfilled.type) {
-                dispatch(fetchCards(lists));
+    const handleDeleteBoard = () => {
+        dispatch(deleteBoard(currentBoard.id)).then((action) => {
+            if (action.type === deleteBoard.fulfilled.type) {
+                dispatch(fetchBoards());
             }
-        })
-        onClose();
-    }
+        });
+        handleClose();
+    };
 
     return (
         <>
-
-            <Button
-                id="basic-button"
+            <IconButton id="boardDropdownIcon"
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{ color: "text.secondary" }}
+                sx={{ color: "text.secondary", marginLeft: "4px" }}
             >
                 <MoreVertIcon />
-            </Button>
+            </IconButton>
+
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
                 MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+                    'aria-labelledby': 'boardDropdownIcon',
                 }}
                 PaperProps={{ // This allows us to access the styles of the dropdown itself.
                     sx: {
-                        backgroundColor: 'background.more', 
+                        backgroundColor: 'background.more',
                     },
                 }}
             >
-                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} onClick={handleOpenEditDialog}>Edit Task</MenuItem>
-                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleDeleteTask}>Delete Task</MenuItem>
+                <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} >Edit Board</MenuItem>
+                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleDeleteBoard}>Delete Board</MenuItem>
             </Menu>
         </>
     );

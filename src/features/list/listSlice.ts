@@ -17,8 +17,12 @@ const initialState: ListState = {
 export const fetchLists = createAsyncThunk(
     'list/fetchLists',
     async (boardID: string) => {
-        const response = await axios(`https://api.trello.com/1/boards/${boardID}/lists?key=${key}&token=${token}`);
-        return response.data;
+        if(boardID !== "") {
+            const response = await axios(`https://api.trello.com/1/boards/${boardID}/lists?key=${key}&token=${token}`);
+            return response.data;
+        } else {
+            return [];
+        }
     }
 );
 

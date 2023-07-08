@@ -16,6 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Boards } from './features/board/Boards';
 import { useAppSelector, useAppDispatch } from './app/hooks';
 import { setCurrentBoard, selectBoards, selectCurrentBoard } from './features/board/boardsSlice';
+import BoardMoreDropdown from './features/board/BoardMoreDropdown';
 import BoardDialog from './features/board/BoardDialog';
 import AddCard from './features/card/AddCard';
 
@@ -126,11 +127,12 @@ function App() {
               </Typography>
             </div>
 
-            <AddCard/>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <AddCard/>
+              <BoardMoreDropdown/>
+            </div>
 
             
-
-
           </Toolbar>
         </AppBar>
 

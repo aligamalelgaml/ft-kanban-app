@@ -44,58 +44,60 @@ export function Boards() {
     setOpenEditBoardDialog(false);
   }
 
+  console.log(currentBoard)
+
   return (
     <>
-      <BoardDialog key={uuidv4()} open={openEditBoardDialog} data={{ currentBoard, lists }} onClose={handleCloseEditBoardDialog} />
-      
-      {loadingLists === true ?
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginY: "30vh" }}>
-          <CircularProgress />
-        </Box>
-        :
+      {currentBoard.id !== "" &&
         <>
-          {lists.length === 0 &&
-            <Stack gap={2} sx={{ display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center" }} marginY={"35vh"}>
-              <Typography align='center' >
-                This board is empty. Create a new column to get started.
-              </Typography>
+          <BoardDialog key={uuidv4()} open={openEditBoardDialog} data={{ currentBoard, lists }} onClose={handleCloseEditBoardDialog} />
 
-              <Button onClick={handleEditBoardDialog} sx={{ width: "10vw", borderRadius: "50px", textTransform: "none", fontSize: "15px", fontWeight: "700" }} variant='contained'>
-                + Add New Column
-              </Button>
+          {loadingLists === true ?
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginY: "30vh" }}>
+              <CircularProgress />
+            </Box>
+            :
+            <>
+              {lists.length === 0 &&
+                <Stack gap={2} sx={{ display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center" }} marginY={"35vh"}>
+                  <Typography align='center' >
+                    This board is empty. Create a new column to get started.
+                  </Typography>
 
-            </Stack>
-          }
+                  <Button onClick={handleEditBoardDialog} sx={{ width: "10vw", borderRadius: "50px", textTransform: "none", fontSize: "15px", fontWeight: "700" }} variant='contained'>
+                    + Add New Column
+                  </Button>
 
-          {!boards &&
-            <Typography align='center' marginY={"35vh"}>
-              No boards created, create a board first.
-            </Typography>
-          }
-
-          {!loadingLists &&
-            <Stack gap={10} direction={"row"}>
-              {lists.map((list) => {
-                return list.idBoard === currentBoard.id &&
-                  <Grid key={list.id} item maxWidth={500}>
-                    <List list={list} />
-                  </Grid>
+                </Stack>
               }
-              )}
 
-              <Grid item>
-                <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: 'background.contrasted', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
-                  + New Column
-                </Paper>
-              </Grid>
-            </Stack>
+              {!boards &&
+                <Typography align='center' marginY={"35vh"}>
+                  No boards created, create a board first.
+                </Typography>
+              }
+
+              {!loadingLists &&
+                <Stack gap={10} direction={"row"}>
+                  {lists.map((list) => {
+                    return list.idBoard === currentBoard.id &&
+                      <Grid key={list.id} item maxWidth={500}>
+                        <List list={list} />
+                      </Grid>
+                  }
+                  )}
+
+                  <Grid item>
+                    <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: 'background.contrasted', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
+                      + New Column
+                    </Paper>
+                  </Grid>
+                </Stack>
+              }
+            </>
           }
-
         </>
       }
-
-
-
     </>
   );
 }

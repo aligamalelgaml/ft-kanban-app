@@ -85,15 +85,15 @@ export const boardSlice = createSlice({
         state.status = 'failed';
         throw new Error("Board creation failed!")
       })
-      .addCase(deleteBoard.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(deleteBoard.fulfilled, (state) => {
+      .addCase(deleteBoard.fulfilled, (state, action) => {
         state.status = 'idle';
+        const deletedBoardId = action.meta.arg;
+        state.boards = state.boards.filter(board => board.id !== deletedBoardId);
+        state.currentBoard = { id: "", name: "" };
       })
       .addCase(deleteBoard.rejected, (state) => {
         state.status = 'failed';
-        // throw new Error("Board deletion failed!")
+        throw new Error("Board deletion failed!")
       });
   },
 });
