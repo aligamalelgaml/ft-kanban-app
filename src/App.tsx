@@ -334,41 +334,32 @@ const getDesignTokens = (mode: PaletteMode) => ({
   typography: {
     fontFamily: 'Plus Jakarta Sans',
   },
-  // components: {
-  //   MuiListItemButton: {
-  //     styleOverrides: {
-  //       root: {
-  //         "&.Mui-selected": {
-  //           backgroundColor: "#2e8b57"
-  //         },
-  //         borderRadius: "0px 20px 20px 0px",
-  //         width: "80%",
-  //       },
-  //     },
-  //   },
-  //   MuiListItem: {
-  //     styleOverrides: {
-  //       root: {
-  //         ":hover": {
-  //           backgroundColor: "#635FC7",
-  //           color: "#635FC7",
-  //         },
-  //         borderRadius: "0px 20px 20px 0px",
-  //         width: "80%",
-  //       },
-  //     },
-  //   },
-  //   MuiListItemText: {
-  //     styleOverrides: {
-  //       root: {
-  //         color: "#828FA3",
-  //         ":hover": {
-  //           color: "#635FC7",
-  //         }
-  //       },
-  //     },
-  //   }
-  // },
+  transitions: {
+    easing: {
+      // Define your desired easing functions
+      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+    duration: {
+      // Define the duration for the transitions
+      standard: 300, // in milliseconds
+    },
+  }, components: {
+    // Apply transitions to all MUI components
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          transition: 'opacity 0.3s', // Apply the transition to the desired CSS property
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          transition: 'opacity 0.3s', // Apply the transition to the desired CSS property
+        },
+      },
+    },
+  },
 });
 
 

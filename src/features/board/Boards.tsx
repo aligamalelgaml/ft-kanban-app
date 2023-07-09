@@ -3,9 +3,9 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
 import { selectLists, fetchLists, selectListStatus } from '../list/listSlice';
 import { selectCards, fetchCards } from '../card/cardSlice';
-import { Button, Box, Typography, Stack, Grid, Card, Paper } from '@mui/material';
+import { Button, Box, Typography, Stack, Grid, Card, Paper, } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import List from '../list/List';
+import ListColumn from '../list/List';
 import BoardDialog from './BoardDialog';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -55,7 +55,7 @@ export function Boards() {
               <CircularProgress />
             </Box>
             :
-            <>
+            <Box>
               {lists.length === 0 &&
                 <Stack gap={2} sx={{ display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center" }} marginY={"35vh"}>
                   <Typography align='center' >
@@ -76,23 +76,24 @@ export function Boards() {
               }
 
               {!loadingLists &&
-                <Stack gap={10} direction={"row"}>
-                  {lists.map((list) => {
-                    return list.idBoard === currentBoard.id &&
-                      <Grid key={list.id} item maxWidth={500}>
-                        <List list={list} />
-                      </Grid>
-                  }
-                  )}
+                <Stack gap={4} direction={"row"} sx={{ overflow: "auto"}}>
+                  <>
+                    {lists.map((list) => {
+                      return list.idBoard === currentBoard.id &&
+                        <Grid key={list.id} item maxWidth={500}>
+                          <ListColumn list={list} />
+                        </Grid>
+                    })}
 
-                  <Grid item>
-                    <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: 'background.contrasted', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
-                      + New Column
-                    </Paper>
-                  </Grid>
+                    <Grid item>
+                      <Paper sx={{ color: "text.secondary", fontWeight: "700", bgcolor: 'background.contrasted', height: "100%", padding: "35px", display: 'flex', justifyContent: 'center', alignItems: 'center', }} onClick={handleEditBoardDialog}>
+                        + New Column
+                      </Paper>
+                    </Grid>
+                  </>
                 </Stack>
               }
-            </>
+            </Box>
           }
         </>
       }
