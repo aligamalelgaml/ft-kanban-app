@@ -48,7 +48,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
     const handleAddField = () => {
         setValue('additionalFields', [
             ...additionalFields,
-            { id: '', value: ' ' },
+            { id: '', value: '' },
         ]);
     };
 
@@ -57,7 +57,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
      * @param index | index of field being deleted.
      */
     const handleRemoveField = (index: number) => {
-        setValue(`additionalFields.${index}.value`, "");
+        setValue(`additionalFields.${index}.value`, "!SIG_DELETE");
     };
 
     /**
@@ -81,7 +81,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
                         }
                     })
                 } else {
-                    dispatch(updateList({ listID: list.id, listName: list.value, closed: list.value === "" })).then((action) => {
+                    dispatch(updateList({ listID: list.id, listName: list.value, closed: list.value === "!SIG_DELETE" })).then((action) => {
                         if (action.type === updateList.fulfilled.type) {
                             dispatch(fetchLists(currentBoard.id));
                         }
@@ -138,7 +138,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
 
                         <div>
                             {additionalFields.map((field, index) =>
-                                field.value !== '' ? (
+                                field.value !== '!SIG_DELETE' ? (
                                     <Box sx={{ display: 'flex' }} key={field.id}>
                                         <TextField
                                             {...register(`additionalFields.${index}.value`)}
