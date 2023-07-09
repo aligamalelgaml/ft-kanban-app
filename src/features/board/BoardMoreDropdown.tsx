@@ -46,6 +46,9 @@ export default function BoardMoreDropdown() {
         setAnchorEl(null);
     };
 
+    /**
+     * Calls the dispatch to delete the board and then refetches boards to update UI, also closes the current menu and delete confirmation dialog.
+     */
     const handleDeleteBoard = () => {
         dispatch(deleteBoard(currentBoard.id)).then((action) => {
             if (action.type === deleteBoard.fulfilled.type) {
@@ -56,10 +59,16 @@ export default function BoardMoreDropdown() {
         handleCloseDeleteDialog();
     };
 
+    /**
+     * Opens the board edit dialog.
+     */
     const handleBoardDialogeClose = () => {
         setOpenBoardEditDialog(false);
     };
 
+    /**
+     * Closes the board edit dialog.
+     */
     const handleCloseDeleteDialog = () => {
         setOpenDeleteDialog(false);
     };

@@ -128,7 +128,7 @@ export default function CardDialog({ open, data, onClose }: FormDialogProps) {
                     </DialogContent>
 
                     <Stack gap={3} sx={{ padding: "30px" }}>
-                        <Button type='submit' sx={{ textTransform: "none", fontSize: "13px", fontWeight: "700", borderRadius: "50px" }} variant='contained'> {data ? "Save Changes" : "Create New Task"}</Button>
+                        <Button type='submit' sx={{ textTransform: "none", fontSize: "13px", fontWeight: "700", borderRadius: "50px", "&:hover": {bgcolor: "primary.hover"}}} variant='contained'> {data ? "Save Changes" : "Create New Task"}</Button>
                     </Stack>
 
                 </form>

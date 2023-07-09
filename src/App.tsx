@@ -75,6 +75,47 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+const AntSwitch = styled(Switch)(({ theme }) => ({
+  width: 28,
+  height: 16,
+  padding: 0,
+  display: 'flex',
+  '&:active': {
+    '& .MuiSwitch-thumb': {
+      width: 15,
+    },
+    '& .MuiSwitch-switchBase.Mui-checked': {
+      transform: 'translateX(9px)',
+    },
+  },
+  '& .MuiSwitch-switchBase': {
+    padding: 2,
+    '&.Mui-checked': {
+      transform: 'translateX(12px)',
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        opacity: 1,
+        backgroundColor: "#635FC7",
+      },
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    transition: theme.transitions.create(['width'], {
+      duration: 200,
+    }),
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 16 / 2,
+    opacity: 1,
+    backgroundColor: "#635FC7",
+    boxSizing: 'border-box',
+  },
+}));
+
 /* #endregion */
 
 function App() {
@@ -120,7 +161,7 @@ function App() {
             <div style={{ display: "flex", alignItems: "center" }}>
               {!open &&
                 <>
-                  <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} style={{marginRight: mobileScreen ? "12px" : ""}} />
+                  <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} style={{ marginRight: mobileScreen ? "12px" : "" }} />
                   {!mobileScreen &&
                     <>
                       <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
@@ -136,7 +177,7 @@ function App() {
               {mobileScreen &&
                 <>
                   {currentBoard.id === "" && <Typography ml={2}>Select a Board</Typography>}
-                  <MobileDropdownMenu/>
+                  <MobileDropdownMenu />
                 </>}
             </div>
 
@@ -268,15 +309,20 @@ function App() {
                 bgcolor: 'background.default',
                 color: 'text.primary',
                 borderRadius: 1,
-                p: "10 20 10 20",
+                p: "15 20 15 20",
               }}
             >
-              <LightModeIcon />
-              <Switch checked={theme.palette.mode === 'dark'} onChange={colorMode.toggleColorMode} sx={{ marginLeft: '8px', marginRight: '8px' }} />
-              <DarkModeIcon />
+              <Stack direction={"row"} alignItems={"center"} padding={1}>
+                <LightModeIcon sx={{ color: "text.secondary" }} />
+                <AntSwitch checked={theme.palette.mode === 'dark'} onChange={colorMode.toggleColorMode} sx={{ marginLeft: '8px', marginRight: '8px' }} />
+                <DarkModeIcon sx={{ color: "text.secondary" }} />
+              </Stack>
             </Box>
 
-            <Button onClick={handleDrawerClose} variant='text' sx={{ textTransform: 'none', width: '80%', marginX: 'auto', mt: "20px" }} startIcon={<VisibilityOffIcon />}>
+            <Button onClick={handleDrawerClose} variant='text' sx={{
+              textTransform: 'none', color: "text.secondary", width: '85%', mt: "20px", justifyContent: 'flex-start', paddingLeft: '2.1vw', // Add this line for left padding
+              borderRadius: "0px 20px 20px 0px", "&:hover": {bgcolor: "secondary.hover"}
+            }} startIcon={<VisibilityOffIcon />}>
               Hide Sidebar
             </Button>
 
@@ -291,22 +337,25 @@ function App() {
         </Main>
 
         {!mobileScreen &&
-          <Fab
-            color="primary"
+          <Button
             aria-label="Add"
             sx={{
+              backgroundColor: "primary.main",
               position: 'fixed',
-              padding: "0px 30px",
+              padding: "10px 20px",
               borderRadius: "0px 40px 40px 0px",
               bottom: (theme) => theme.spacing(1),
               left: (theme) => theme.spacing(-1),
               zIndex: (theme) => theme.zIndex.appBar + 1,
+              "&:hover": {
+                backgroundColor: "primary.hover"
+              },
               ...(open && { display: 'none' }),
             }}
             onClick={handleDrawerOpen}
           >
-            <VisibilityIcon />
-          </Fab>
+            <VisibilityIcon sx={{ color: "#FFFFFF" }} />
+          </Button>
         }
       </Box>
     </>
