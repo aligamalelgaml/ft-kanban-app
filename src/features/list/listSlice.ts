@@ -37,7 +37,7 @@ export const addList = createAsyncThunk(
 export const updateList = createAsyncThunk(
     'list/updateList',
     async ({ listID, listName, closed }: { listID: string, listName: string, closed: boolean }) => {
-        const response = await axios.put(`https://api.trello.com/1/lists/${listID}?name=${listName}&closed=${closed}&key=${key}&token=${token}`);
+        const response = listName === "" ? await axios.put(`https://api.trello.com/1/lists/${listID}?closed=${closed}&key=${key}&token=${token}`) : await axios.put(`https://api.trello.com/1/lists/${listID}?name=${listName}&closed=${closed}&key=${key}&token=${token}`);
         return response.data;
     }
 )

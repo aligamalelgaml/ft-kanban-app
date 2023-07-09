@@ -20,9 +20,9 @@ import BoardMoreDropdown from './features/board/BoardMoreDropdown';
 import BoardDialog from './features/board/BoardDialog';
 import AddCard from './features/card/AddCard';
 import MobileDropdownMenu from './features/board/BoardMobileMenu';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
-
-/* #region APP BAR / DRAWER STYLING  */
+/* #region APP BAR / DRAWER STYLING / CUSTOM SWITCH STYLING  */
 const drawerWidth = 300;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -75,7 +75,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-const AntSwitch = styled(Switch)(({ theme }) => ({
+export const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
   height: 16,
   padding: 0,
@@ -224,8 +224,6 @@ function App() {
                 <ListItem sx={{ width: "85%" }} key={board.id} disablePadding>
                   <ListItemButton onClick={() => dispatch(setCurrentBoard(board))} selected={board.id === currentBoard.id}
                     sx={{
-                      fontSize: "15px",
-                      fontWeight: "700",
                       whiteSpace: "nowrap",
                       width: "85%",
                       borderRadius: "0px 20px 20px 0px",
@@ -250,9 +248,9 @@ function App() {
                     }}
                   >
                     <ListItemIcon style={{ minWidth: '35px' }}>
-                      <TableChartIcon />
+                      <DashboardIcon />
                     </ListItemIcon>
-                    <ListItemText primary={board.name} />
+                    <ListItemText primaryTypographyProps={{ fontSize: '15px', fontWeight: "700" }} primary={board.name} />
                   </ListItemButton>
                 </ListItem>
               )}
@@ -260,8 +258,6 @@ function App() {
               <ListItem sx={{ width: "85%" }} disablePadding>
                 <ListItemButton onClick={() => handleAddBoard()}
                   sx={{
-                    fontSize: "15px",
-                    fontWeight: "700",
                     whiteSpace: "nowrap",
                     color: "primary.main",
                     width: "85%",
@@ -289,9 +285,9 @@ function App() {
                   }}
                 >
                   <ListItemIcon style={{ minWidth: '35px' }}>
-                    <TableChartIcon />
+                    <DashboardIcon />
                   </ListItemIcon>
-                  <ListItemText primary={"+ Create New Board"} />
+                  <ListItemText primaryTypographyProps={{ fontSize: '15px', fontWeight: "700" }} primary={"+ Create New Board"} />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -321,7 +317,7 @@ function App() {
 
             <Button onClick={handleDrawerClose} variant='text' sx={{
               textTransform: 'none', color: "text.secondary", width: '85%', mt: "20px", justifyContent: 'flex-start', paddingLeft: '2.1vw', // Add this line for left padding
-              borderRadius: "0px 20px 20px 0px", "&:hover": {bgcolor: "secondary.hover"}
+              borderRadius: "0px 20px 20px 0px", "&:hover": { bgcolor: "secondary.hover" }
             }} startIcon={<VisibilityOffIcon />}>
               Hide Sidebar
             </Button>

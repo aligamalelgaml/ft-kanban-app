@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { Menu, MenuItem, IconButton, useTheme } from '@mui/material';
+import { Menu, MenuItem, IconButton, useTheme, Stack } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import { Box, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Typography, Switch } from '@mui/material';
@@ -9,6 +9,7 @@ import BoardDialog from './BoardDialog';
 import { ColorModeContext } from '../../App';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { AntSwitch } from '../../App';
 
 
 export default function MobileDropdownMenu() {
@@ -159,12 +160,14 @@ export default function MobileDropdownMenu() {
                         bgcolor: 'background.default',
                         color: 'text.primary',
                         borderRadius: 1,
-                        p: "10 20 10 20",
+                        p: "15 20 15 20",
                     }}
                 >
-                    <LightModeIcon />
-                    <Switch checked={theme.palette.mode === 'dark'} onChange={colorMode.toggleColorMode} sx={{ marginLeft: '8px', marginRight: '8px' }} />
-                    <DarkModeIcon />
+                    <Stack direction={"row"} alignItems={"center"} padding={1}>
+                        <LightModeIcon sx={{ color: "text.secondary" }} />
+                        <AntSwitch checked={theme.palette.mode === 'dark'} onChange={colorMode.toggleColorMode} sx={{ marginLeft: '8px', marginRight: '8px' }} />
+                        <DarkModeIcon sx={{ color: "text.secondary" }} />
+                    </Stack>
                 </Box>
             </Menu>
         </div>
