@@ -39,7 +39,7 @@ export default function CardTasks({ listID, listName }: CardProps) {
             </Stack>
 
             {cards.map((card) =>
-                <Card onClick={() => setSelectedCard(card)} key={card.id} elevation={3} sx={{ padding: "20px" }}>
+                <Card onClick={() => setSelectedCard(card)} key={card.id} elevation={1} sx={{ padding: "20px" }}>
                     <Typography fontWeight={700} fontSize={15}> {card.name} </Typography>
                 </Card>)}
 

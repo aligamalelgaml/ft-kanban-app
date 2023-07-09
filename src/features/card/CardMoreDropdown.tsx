@@ -61,11 +61,12 @@ export default function CardMoreDropdown({ card, openEditDialog, onClose } : any
 
             <Button
                 id="basic-button"
+                disableRipple
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{ color: "text.secondary" }}
+                sx={{ color: "text.secondary", "&:hover": {bgcolor: "transparent"} }}
             >
                 <MoreVertIcon />
             </Button>

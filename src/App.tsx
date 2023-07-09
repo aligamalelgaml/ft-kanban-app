@@ -224,6 +224,7 @@ function App() {
                 <ListItem sx={{ width: "85%" }} key={board.id} disablePadding>
                   <ListItemButton onClick={() => dispatch(setCurrentBoard(board))} selected={board.id === currentBoard.id}
                     sx={{
+                      color: "text.secondary",
                       whiteSpace: "nowrap",
                       width: "85%",
                       borderRadius: "0px 20px 20px 0px",
@@ -317,7 +318,7 @@ function App() {
 
             <Button onClick={handleDrawerClose} variant='text' sx={{
               textTransform: 'none', color: "text.secondary", width: '85%', mt: "20px", justifyContent: 'flex-start', paddingLeft: '2.1vw', // Add this line for left padding
-              borderRadius: "0px 20px 20px 0px", "&:hover": { bgcolor: "secondary.hover" }
+              borderRadius: "0px 20px 20px 0px", "&:hover": { bgcolor: "secondary.main" }
             }} startIcon={<VisibilityOffIcon />}>
               Hide Sidebar
             </Button>

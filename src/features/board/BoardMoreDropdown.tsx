@@ -84,6 +84,8 @@ export default function BoardMoreDropdown() {
 
             <IconButton
                 id="boardDropdownIcon"
+                disableRipple
+                disableFocusRipple
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
