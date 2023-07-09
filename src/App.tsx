@@ -19,6 +19,7 @@ import { setCurrentBoard, selectBoards, selectCurrentBoard } from './features/bo
 import BoardMoreDropdown from './features/board/BoardMoreDropdown';
 import BoardDialog from './features/board/BoardDialog';
 import AddCard from './features/card/AddCard';
+import MobileDropdownMenu from './features/board/BoardMobileMenu';
 
 
 /* #region APP BAR / DRAWER STYLING  */
@@ -41,6 +42,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     }),
     marginLeft: 0,
   }),
+  maxHeight: 'calc(100vh - 64px)'
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -86,6 +88,8 @@ function App() {
   const boards = useAppSelector(selectBoards);
   const currentBoard = useAppSelector(selectCurrentBoard);
 
+
+
   const handleAddBoard = () => {
     setBoardDialogeOpen(true);
   }
@@ -116,23 +120,32 @@ function App() {
             <div style={{ display: "flex", alignItems: "center" }}>
               {!open &&
                 <>
-                  <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} />
-                  <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
-                  <Divider orientation="vertical" flexItem sx={{ mx: "20px" }} />
+                  <img alt="kanban logo" src={require('./assets/kanbanLogo.png')} style={{marginRight: mobileScreen ? "12px" : ""}} />
+                  {!mobileScreen &&
+                    <>
+                      <Typography variant='h4' marginLeft={"15px"} fontWeight={"800"} >kanban</Typography>
+                      <Divider orientation="vertical" flexItem sx={{ mx: "20px" }} />
+                    </>}
                 </>
               }
 
               <Typography variant="h6" fontWeight={800} noWrap component="div">
                 {currentBoard.name}
               </Typography>
+
+              {mobileScreen &&
+                <>
+                  {currentBoard.id === "" && <Typography ml={2}>Select a Board</Typography>}
+                  <MobileDropdownMenu/>
+                </>}
             </div>
 
             <div style={{ display: "flex", alignItems: "center" }}>
-              <AddCard/>
-              <BoardMoreDropdown/>
+              <AddCard />
+              <BoardMoreDropdown />
             </div>
 
-            
+
           </Toolbar>
         </AppBar>
 
@@ -302,7 +315,7 @@ function App() {
 
 //#region START OF EXPORTED THEMED APP
 
-const ColorModeContext = createContext({ toggleColorMode: () => { } });
+export const ColorModeContext = createContext({ toggleColorMode: () => { } });
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -324,7 +337,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       default: mode === 'light' ? '#F4F7FD' : '#121721',
       paper: mode === 'light' ? '#FFFFFF' : '#2B2C37',
       more: mode === 'light' ? '#FFFFFF' : '#20212C',
-      contrasted: mode === 'light' ?  "#E4EBFA" : "rgba(43, 44, 55, 0.25)",
+      contrasted: mode === 'light' ? "#E4EBFA" : "rgba(43, 44, 55, 0.25)",
     },
     text: {
       primary: mode === 'light' ? "#000112" : '#FFFFFF',
