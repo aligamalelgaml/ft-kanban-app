@@ -28,7 +28,7 @@ export const createBoard = createAsyncThunk(
   'board/createBoard',
   async ({ boardName, lists }: { boardName: string, lists: string[] }, { dispatch }) => {
       const noLists = lists.length === 0;
-      const postBoard = await axios.post(`https://api.trello.com/1/boards/?name=${boardName}&defaultLists=${noLists}&key=${key}&token=${token}`);
+      await axios.post(`https://api.trello.com/1/boards/?name=${boardName}&defaultLists=${noLists}&key=${key}&token=${token}`);
       const { data } = await axios(`https://api.trello.com/1/members/me/boards?key=${key}&token=${token}`)
       const newBoard = data.find((board: any) => board.name === boardName);
 
@@ -37,6 +37,15 @@ export const createBoard = createAsyncThunk(
       }
 
       return newBoard;
+  }
+)
+
+export const updateBoard = createAsyncThunk(
+  'board/updateBoard',
+  async ({boardID, boardName}: {boardID: string, boardName: string}) => {
+    const encodedName = encodeURIComponent(boardName);
+
+    await axios.put(`https://api.trello.com/1/boards/${boardID}?name=${encodedName}&key=${key}&token=${token}`);
   }
 )
 
@@ -94,6 +103,15 @@ export const boardSlice = createSlice({
       .addCase(deleteBoard.rejected, (state) => {
         state.status = 'failed';
         throw new Error("Board deletion failed!")
+      })
+      .addCase(updateBoard.fulfilled, (state, action) => {
+        state.status = 'idle';
+        const board = action.meta.arg;
+        state.currentBoard = { id: board.boardID, name: board.boardName };
+      })
+      .addCase(updateBoard.rejected, (state) => {
+        state.status = 'failed';
+        throw new Error("Board update failed!")
       });
   },
 });

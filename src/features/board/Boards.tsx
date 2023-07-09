@@ -2,23 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
 import { selectLists, fetchLists, selectListStatus } from '../list/listSlice';
-import { selectCards, fetchCards } from '../card/cardSlice';
-import { Button, Box, Typography, Stack, Grid, Card, Paper, } from '@mui/material';
+import { fetchCards } from '../card/cardSlice';
+import { Button, Box, Typography, Stack, Grid, Paper, } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import ListColumn from '../list/List';
 import BoardDialog from './BoardDialog';
 import { v4 as uuidv4 } from 'uuid';
 
 export function Boards() {
-  const [openEditBoardDialog, setOpenEditBoardDialog] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const [openEditBoardDialog, setOpenEditBoardDialog] = useState(false); // Tracks edit board dialog state (on/off)
 
   const boards = useAppSelector(selectBoards);
   const currentBoard = useAppSelector(selectCurrentBoard);
   const lists = useAppSelector(selectLists);
-  const listStatus = useAppSelector(selectListStatus);
   const loadingLists = useAppSelector(selectListStatus) === "loading";
-  const dispatch = useAppDispatch();
-
 
   /**
    * Initial call to fetch all user boards + switches to new board upon new board creation, also fetchs user lists (columns) once currentBoard changes then fetches cards.

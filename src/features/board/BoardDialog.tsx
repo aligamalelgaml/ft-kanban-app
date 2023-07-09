@@ -8,12 +8,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IconButton, Box, Stack } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { v4 as uuidv4 } from 'uuid';
-import { useForm, FieldErrors, Control } from 'react-hook-form';
-import { createBoard, deleteBoard } from './boardsSlice';
-import { updateList, addList, selectLists, fetchLists } from '../list/listSlice'
-import { selectBoards, fetchBoards, selectCurrentBoard } from './boardsSlice';
-import { fetchCards } from '../card/cardSlice';
+import { useForm } from 'react-hook-form';
+import { createBoard, fetchBoards, setCurrentBoard, updateBoard } from './boardsSlice';
+import { updateList, addList, fetchLists } from '../list/listSlice'
+import { selectCurrentBoard } from './boardsSlice';
 
 
 interface FormData {
@@ -30,7 +28,7 @@ interface FormDialogProps {
 export default function FormDialog({ open, data, onClose }: FormDialogProps) {
     const dispatch = useAppDispatch();
     const currentBoard = useAppSelector(selectCurrentBoard);
-    const lists = useAppSelector(selectLists);
+
     const editing = data ? true : false;
 
     const {
@@ -38,13 +36,15 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
         handleSubmit,
         watch,
         setValue,
-        control,
         formState: { errors },
         reset,
     } = useForm<FormData>();
 
     const additionalFields = watch('additionalFields') || [];
 
+    /**
+     * Creates a new list with a value of a whitespace. It's important to note that we avoid using an empty string as that is equivelant to deleting a list.
+     */
     const handleAddField = () => {
         setValue('additionalFields', [
             ...additionalFields,
@@ -52,13 +52,26 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
         ]);
     };
 
+    /**
+     * Removes list found at index.
+     * @param index | index of field being deleted.
+     */
     const handleRemoveField = (index: number) => {
         setValue(`additionalFields.${index}.value`, "");
     };
 
+    /**
+     * Iterates over each 
+     */
     const onSubmit = handleSubmit(({ boardName, additionalFields }) => {
         if (data) {
-            console.log("editing", boardName, additionalFields);
+            console.log("Editing...", boardName, additionalFields);
+
+            dispatch(updateBoard({boardID: currentBoard.id, boardName: boardName})).then((action) => {
+                if(action.type === updateBoard.fulfilled.type) {
+                    dispatch(fetchBoards())
+                }
+            })
 
             additionalFields.forEach((list) => {
                 if (list.id === '') {
@@ -77,11 +90,11 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
             })
 
         } else {
-            console.log("adding", boardName, additionalFields);
+            console.log("Adding...", boardName, additionalFields);
+
             const newBoardColumns = additionalFields?.map((field) => field.value) || [];
             dispatch(createBoard({ boardName, lists: newBoardColumns }));
         }
-
 
         reset();
         onClose();
