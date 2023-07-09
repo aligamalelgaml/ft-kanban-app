@@ -45,6 +45,9 @@ export const fetchCards = createAsyncThunk(
   }
 );
 
+/**
+ * Adds a new card with passed new args.
+ */
 export const addCard = createAsyncThunk(
   'card/createCard',
   async (card: { title: string, desc?: string, listID: string }, { dispatch }) => {
@@ -60,6 +63,9 @@ export const addCard = createAsyncThunk(
   }
 )
 
+/**
+ * Updates card with passed new args.
+ */
 export const updateCard = createAsyncThunk(
   'card/updateCard',
   async (updatedCard: {id: string, title: string, desc: string, listID: string }) => {
@@ -75,6 +81,9 @@ export const updateCard = createAsyncThunk(
   }
 );
 
+/**
+ * Deletes card with the passed arguement ID.
+ */
 export const deleteCard = createAsyncThunk(
   'card/deleteCard',
   async (cardID: string) => {

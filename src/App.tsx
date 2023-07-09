@@ -151,6 +151,12 @@ function App() {
   const boards = useAppSelector(selectBoards); 
   const currentBoard = useAppSelector(selectCurrentBoard);
 
+  useEffect(() => {
+    if(mobileScreen) {
+      setOpen(false);
+    }
+  }, [mobileScreen])
+
   /**
    * Opens the create new board dialog.
    */
@@ -248,6 +254,7 @@ function App() {
           </Toolbar>
         </AppBar>
 
+        
         <Drawer
           sx={{
             width: drawerWidth,

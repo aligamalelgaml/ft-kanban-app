@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { IconButton, Box, Stack } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useForm } from 'react-hook-form';
-import { createBoard, fetchBoards, setCurrentBoard, updateBoard } from './boardsSlice';
+import { createBoard, fetchBoards, updateBoard } from './boardsSlice';
 import { updateList, addList, fetchLists } from '../list/listSlice'
 import { selectCurrentBoard } from './boardsSlice';
 
@@ -108,7 +108,7 @@ export default function FormDialog({ open, data, onClose }: FormDialogProps) {
                 setValue(`additionalFields.${index}.id`, list.id);
             });
         }
-    }, [data]);
+    }, [data]); // eslint-disable-line
 
     return (
         <div>

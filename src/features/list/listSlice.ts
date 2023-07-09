@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../../app/store';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
 import axios from 'axios';
 import {key, token} from '../../app/auth';
 
@@ -35,7 +35,9 @@ export const fetchLists = createAsyncThunk(
 export const addList = createAsyncThunk(
     'list/addList',
     async ({ boardID, listName }: { boardID: string, listName: string }) => {
-        const response = await axios.post(`https://api.trello.com/1/boards/${boardID}/lists?name=${listName}&key=${key}&token=${token}`);
+        const encodedName = encodeURIComponent(listName);
+
+        const response = await axios.post(`https://api.trello.com/1/boards/${boardID}/lists?name=${encodedName}&key=${key}&token=${token}`);
         return response.data;
     }
 )
@@ -84,7 +86,7 @@ export const listSlice = createSlice({
     },
 });
 
-export const {  } = listSlice.actions;
+// export const {  } = listSlice.actions; --> Unneeded, but commented out in case it's needed in the future.
 
 export const selectLists = (state: RootState) => state.list.lists;
 export const selectListStatus = (state: RootState) => state.list.status;
