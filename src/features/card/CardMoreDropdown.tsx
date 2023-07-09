@@ -6,12 +6,19 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { deleteCard, fetchCards } from './cardSlice';
 import { selectLists } from '../list/listSlice';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { Stack, Dialog } from '@mui/material';
 
 export default function CardMoreDropdown({ card, openEditDialog, onClose } : any) {
     const dispatch = useAppDispatch();
     const lists = useAppSelector(selectLists);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
     /**
      * Opens the dropdown menu at menu location.
@@ -45,6 +52,10 @@ export default function CardMoreDropdown({ card, openEditDialog, onClose } : any
         onClose();
     }
 
+    const handleCloseDeleteDialog = () => {
+        setOpenDeleteDialog(false);
+    }
+
     return (
         <>
 
@@ -73,8 +84,67 @@ export default function CardMoreDropdown({ card, openEditDialog, onClose } : any
                 }}
             >
                 <MenuItem sx={{ color: "text.secondary", fontSize: "13px", fontWeight: "500" }} onClick={handleOpenEditDialog}>Edit Task</MenuItem>
-                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={handleDeleteTask}>Delete Task</MenuItem>
+                <MenuItem sx={{ color: "destructive.main", fontSize: "13px", fontWeight: "500" }} onClick={() => setOpenDeleteDialog(true)}>Delete Task</MenuItem>
             </Menu>
+
+            <Dialog
+                fullWidth
+                maxWidth={"xs"}
+                open={openDeleteDialog}
+                onClose={handleCloseDeleteDialog}
+            >
+                <DialogTitle
+                    sx={{
+                        fontSize: "18px",
+                        color: "primary.destructive",
+                        fontWeight: "700",
+                    }}
+                >
+                    Delete This Task?
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: "15px",
+                            fontWeight: "500",
+                        }}
+                    >
+                        Are you sure you want to delete the '{card.name}' task and its subtasks? This action cannot be reversed.
+                    </DialogContentText>
+                    <Stack sx={{ display: "flex", flexDirection: "row" }} mt={3} gap={2}>
+                        <Button
+                            onClick={handleDeleteTask}
+                            sx={{
+                                bgcolor: "destructive.main",
+                                color: "#FFFFFF",
+                                borderRadius: "50px",
+                                flex: "1 1 50%",
+                                textTransform: "none",
+                                "&:hover": {
+                                    bgcolor: "destructive.hover",
+                                },
+                            }}
+                        >
+                            Delete
+                        </Button>
+                        <Button
+                            onClick={handleCloseDeleteDialog}
+                            sx={{
+                                bgcolor: "secondary.main",
+                                borderRadius: "50px",
+                                flex: "1 1 50%",
+                                textTransform: "none",
+                                "&:hover": {
+                                    bgcolor: "secondary.hover",
+                                },
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    </Stack>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
